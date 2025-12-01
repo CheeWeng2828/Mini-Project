@@ -1,0 +1,31 @@
+﻿@model NewPasswordVM
+
+@{
+    ViewBag.Title = "Account | Reset Password";
+}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+<form class="form" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label asp-for="Email"></label>
+    <b>@Model.Email</b>
+    <input type="hidden" asp-for="Email">
+
+    <label asp-for="New"></label>
+    <input asp-for="New">
+    <span asp-validation-for="New"></span>
+
+    <label asp-for="Confirm"></label>
+    <input asp-for="Confirm">
+    <span asp-validation-for="Confirm"></span>
+
+    <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+
+    <section>
+        <button class="update-btn">Update</button>
+        <button class="reset-btn" type="reset">Reset</button>
+    </section>
+</form>

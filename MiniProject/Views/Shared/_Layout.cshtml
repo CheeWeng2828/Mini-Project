@@ -1,5 +1,130 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@inject DB db
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="/images/favicon.jpg">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="/css/pager.css">
+    <link rel="stylesheet" href="/css/app.css" asp-append-version="true">
+    @RenderSection("head", false)
+</head>
+<body>
+    <div class="info">@Html.Raw(TempData["Info"])</div>
+    <header>
+        <a href="/"><img src="/images/favicon.jpg"></a>
+        <h1><a href="/">LuxeVista Hotel</a></h1>
+
+        @if (User.Identity!.IsAuthenticated)
+        {
+            <div>
+                @User.Identity.Name |
+                @(User.IsInRole("Admin") ? "Admin" : "")
+                @(User.IsInRole("Member") ? "Member" : "")
+            </div>
+        }
+        <button id="themeToggle" class="btn btn-sm btn-outline-secondary">Toggle Theme</button>
+
+
+        @*Show member profile picture*@
+        @if (User.IsInRole("Member"))
+        {
+            var user = db.Members.Where(m => m.Email == User.Identity!.Name).FirstOrDefault();
+            var photoURL = user.PhotoURL;
+            <a href="/Account/UpdateProfile"><img src="/photos/@photoURL"></a>
+        }
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/Review/AllReview">Review</a>
+
+        @if (User.IsInRole("Member"))
+        {
+            <a href="/Checkout/History">My Bookings</a>
+
+        }
+        @if (User.IsInRole("Admin"))
+
+        {
+            <a href="/RoomType/Index">Room Manage</a>
+            <a href="/User/Index">User Manage</a>
+            <a href="/Reservation/Index">Order</a>
+            <a href="/Branch/Index">Branch Manage</a>
+
+        }
+        <div></div>
+        @* Menu trimming *@
+
+
+        <div></div>
+
+        @if (User.IsInRole("Admin"))
+
+        {
+            <a href="/Account/UpdatePassword">Update Password</a>
+        }
+        @if (User.Identity!.IsAuthenticated)
+        {
+            <a href="/Account/Logout">Logout</a>
+        }
+        else
+        {
+            <a href="/Account/Login">Login</a>
+            <a href="/Account/Register">Register</a>
+            <a href="/Account/ResetPassword">Reset Password</a>
+        }
+    </nav>
+
+    <main>
+        <h1>@ViewBag.Title</h1>
+        @RenderBody()
+    </main>
+
+    <footer>
+        Developed by <b>DFT2S1G8</b>
+        Copyrighted &copy; @DateTime.Today.Year
+    </footer>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/js/app.js" asp-append-version="true"></script>
+    @RenderSection("foot", false)
+
+
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("themeToggle");
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                document.body.classList.add("dark-mode");
+                toggleBtn.textContent = "Light Mode";
+                toggleBtn.style.backgroundColor = "#3240a8";
+                toggleBtn.style.color = "white";
+            } else {
+                document.body.classList.remove("dark-mode");
+                toggleBtn.textContent = "Dark Mode";
+                toggleBtn.style.backgroundColor = "#3240a8";
+                toggleBtn.style.color = "white";
+            }
+        }
+
+        // Apply saved theme on load
+        applyTheme(localStorage.getItem("theme") === "dark");
+
+        toggleBtn.addEventListener("click", function () {
+            const isDark = !document.body.classList.contains("dark-mode");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+            applyTheme(isDark);
+        });
+    });
+</script>

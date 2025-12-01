@@ -163,7 +163,7 @@ public class DB : DbContext
 
 
         // Foreign Keys
-        public int UserId { get; set; }
+        public int MemberId { get; set; }
 
 
         // Navigation Properties

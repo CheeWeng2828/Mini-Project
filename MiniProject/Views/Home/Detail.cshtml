@@ -1,0 +1,34 @@
+﻿@model RoomType
+@{
+    ViewBag.Title = "Detail";
+    var r = Model;
+    var photo = r.RoomGalleries.Where(g => g.RoomTypeId == r.Id).Select(g => g.PhotoURL).ToList();
+}
+
+<div class="slider">
+    <div class="slides">
+        @foreach (var g in photo)
+        {
+            <img class="slide" src="/room/@g">
+        }
+    </div>
+    <button class="prev" onclick="prevSlide()">&#10094;</button>
+    <button class="next" onclick="nextSlide()">&#10095;</button>
+
+</div>
+
+<table class="table">
+    <tr>
+        <th>Type</th>
+        <td>@r.Name</td>
+    </tr>
+    <tr>
+        <th>Price Per Night(RM)</th>
+        <td>@r.Price</td>
+    </tr>
+</table>
+
+<p>
+    <button class="back-btn" data-get="/">Back</button>
+    <button class="detail-btn" data-get="/Reservation/RoomStatus/@r.Id">Check Available</button>
+</p>

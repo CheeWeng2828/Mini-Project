@@ -1,0 +1,93 @@
+﻿@model IEnumerable<RoomType>
+@{
+    ViewBag.Title = "Room";
+    Layout = "_Layout";
+}
+@section head {
+    <style>
+        /* Products Grid */
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 250px;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+            .product:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+
+            .product > img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .product > div {
+                position: absolute;
+                background: rgba(0,0,0,0.8);
+                color: #fff;
+                padding: 10px;
+                text-align: center;
+                inset: auto 0 0 0;
+            }
+    </style>
+}
+<div style="display: flex; gap: 20px; align-items: flex-start;">
+    <div>
+        <p>Map Location :</p>
+        <iframe src="https://www.google.com/maps?q=KualaLumpur,Malaysia&output=embed"
+                width="350"
+                height="175"
+                style="border:0;"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+
+    </div>
+
+
+    @if (ViewBag.Review != null)
+    {
+        var r = ViewBag.Review;
+        <div style="flex: 1; max-width: 400px;">
+            <p>Review : (Click For More)</p>
+            <a href="/Review/HotelReview?hotelId=@r.HotelId" style="text-decoration: none; color: inherit;">
+                <div class="review-box border rounded shadow-sm p-3 h-100">
+                    <small class="text-muted">By @r.MemberEmail</small>
+                    <hr />
+                    <p>@r.Comment</p>
+                    <div class="ratings">
+                        <p><strong>Service:</strong> @r.ServiceRating / 5</p>
+                        <p><strong>Cleanliness:</strong> @r.CleanlinessRating / 5</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+<div class="products">
+    @foreach (var t in Model)
+    {
+        var photo = t.RoomGalleries.Where(r => r.RoomTypeId == t.Id).Select(r => r.PhotoURL).FirstOrDefault();
+
+        <div class="product">
+
+            <div>@t.Name - RM @t.Price</div>
+            <img style="cursor:pointer" data-get="Home/Detail?id=@t.Id" src="/room/@photo">
+        </div>
+    }
+</div>
