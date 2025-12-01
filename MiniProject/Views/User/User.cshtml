@@ -1,0 +1,87 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<User>
+
+@{
+    string[] fields = ["Email", "Name", "Role", "Active"];
+}
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<p>
+    <button data-get="/User/AddAdmin">New Admin</button>
+</p>
+
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+</p>
+
+<table class="table">
+
+    <tr>
+        @foreach (var f in fields)
+        {
+            string d = "asc";
+            string c = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir == "des" ? "asc" : "des";
+                c = ViewBag.Dir;
+            }
+
+            <th>
+                <a data-ajax="true"
+                   data-ajax-update="#target"
+                   data-ajax-loading="#loader"
+                   href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a>
+            </th>
+        }
+        <th>More</th>
+    </tr>
+
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.Email</td>
+            <td>@u.Name</td>
+            <td>@u.Role</td>
+            <td>@u.Active</td>
+            <td>
+                <button data-get="/User/Detail?id=@u.Id">Detail</button>
+
+                @if (u.Active == true)
+                {
+                    <button data-get="/User/ActiveUser?id=@u.Id">Inactive</button>
+                }
+                else
+                {
+                    <button data-get="/User/ActiveUser?id=@u.Id">Active</button>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+Model,
+p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

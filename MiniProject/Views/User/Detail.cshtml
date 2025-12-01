@@ -1,0 +1,29 @@
+﻿@model User
+
+
+@{
+    ViewBag.Title = "User | Detail";
+    var u = Model;
+}
+
+@* @if (User.IsInRole("Member"))
+{
+    var photoURL = db.Members.Find(User.Identity!.Name)!.PhotoURL;
+    <img src="/photos/@photoURL">
+} *@
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <td>@u.Name</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@u.Email</td>
+    </tr>
+    <tr>
+        <th>Role</th>
+        <td>@u.Role</td>
+    </tr>
+
+</table>
