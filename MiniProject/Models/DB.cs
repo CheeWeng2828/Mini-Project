@@ -8,9 +8,23 @@ namespace MiniProject.Models;
 
 public class DB : DbContext
 {
-    public DB(DbContextOptions options) : base(options)
-    {
-    }
+    public DB(DbContextOptions options) : base(options){ }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Admin> Admins { get; set; }
+    public DbSet<Member> Members { get; set; }
+
+    public DbSet<RoomType> RoomTypes { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    //public DbSet<Hotel> Hotels { get; set; }
+    public DbSet<RoomGallery> RoomGalleries { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+
+    public DbSet<Payment> Payment { get; set; }
+
+    public DbSet<UserToken> UserTokens { get; set; }
+
+    public DbSet<Review> Reviews { get; set; }
+}
 
     public class User
     {
@@ -25,7 +39,7 @@ public class DB : DbContext
         [MaxLength(100)]
         public string Name { get; set; }
         public bool Active { get; set; }
-        public int FailedLoginCount { get; set; }
+        public int LoginAttemptCount { get; set; }  // For login block
         public DateTime? LastFailedLoginTime { get; set; }
 
         public string Role => GetType().Name;
@@ -49,7 +63,7 @@ public class DB : DbContext
 
     public class RoomType
     {
-        [Key, MaxLength(1)]
+        [Key, MaxLength(3)]
         public string Id { get; set; }
 
         [MaxLength(100)]
@@ -58,16 +72,10 @@ public class DB : DbContext
         [Precision(6, 2)]
         public decimal Price { get; set; }
 
-        public bool Active { get; set; }
-
-        // Foreign Keys
-        public string? HotelId { get; set; }
-
-
         // Navigation Properties
         public List<Room> Rooms { get; set; } = [];
         public List<RoomGallery> RoomGalleries { get; set; } = [];
-        public Hotel Hotel { get; set; }
+        //public Hotel Hotel { get; set; }
     }
 
     public class Room
@@ -78,35 +86,12 @@ public class DB : DbContext
         public bool Active { get; set; }
 
         // Foreign Keys
-        public string TypeId { get; set; }
+        public string RoomTypeId { get; set; }
 
         // Navigation Properties
-        public RoomType Type { get; set; }
+        public RoomType RoomTypes { get; set; }
         public List<Reservation> Reservations { get; set; } = [];
     }
-
-    public class Hotel
-    {
-        [Key, MaxLength(4)]
-        public string Id { get; set; }
-
-        [MaxLength(100)]
-        public string Name { get; set; }
-
-        [MaxLength(100)]
-        public string Location { get; set; }
-        public string State { get; set; }
-        public bool Active { get; set; } = true;
-
-        [MaxLength(100)]
-        public string? PhotoURL { get; set; }
-
-        // Navigation Properties
-        public List<RoomType> Types { get; set; } = [];
-        public List<Review> Reviews { get; set; } = [];
-
-    }
-
 
     public class RoomGallery
     {
@@ -116,13 +101,10 @@ public class DB : DbContext
         public string PhotoURL { get; set; }
 
         //Foreign Key
-        public string? TypeId { get; set; }
-
+        public string RoomTypeId { get; set; }
 
         // Navigation Properties
-        public RoomType Type { get; set; }
-
-
+        public RoomType RoomTypes { get; set; }
     }
     public class Reservation
     {
@@ -136,16 +118,13 @@ public class DB : DbContext
         [Precision(6, 2)]
         public decimal Price { get; set; }
 
-        public bool Paid { get; set; }
         public bool Active { get; set; } = true;
 
 
         // Foreign Keys (MemberEmail, RoomId)
-        public string MemberEmail { get; set; }
+        public int MemberId { get; set; }
 
         public string RoomId { get; set; }
-        public int? PaymentId { get; set; }
-
 
         // Navigation Properties
         public Member Member { get; set; }
@@ -160,19 +139,18 @@ public class DB : DbContext
         public int Id { get; set; }
         [Precision(6, 2)]
         public decimal Amount { get; set; }
-        public string? TransactionId { get; set; }
-        public string PaymentMethod { get; set; } = "-";
-        public bool IsRefund { get; set; } = false;
+        public string TransactionId { get; set; }
+        public string PaymentMethod { get; set; }
+
+        public string Status { get; set; }
         public DateTime? RefundDate { get; set; }
         public string? RefundId { get; set; }
 
         // Foreign Keys
         public int ReservationId { get; set; }
-        public string MemberEmail { get; set; }
 
         // Navigation Properties
-        public Member Member { get; set; }
-        public List<Reservation> Reservations { get; set; } = [];
+        public Reservation Reservations { get; set; }
 
     }
 
@@ -185,7 +163,8 @@ public class DB : DbContext
 
 
         // Foreign Keys
-        public string MemberEmail { get; set; }
+        public int UserId { get; set; }
+
 
         // Navigation Properties
         public Member Member { get; set; }
@@ -196,10 +175,7 @@ public class DB : DbContext
         public int Id { get; set; }
 
         [Required]
-        public string MemberEmail { get; set; }
-
-        [Required]
-        public string HotelId { get; set; }
+        public int MemberId { get; set; }
 
         public int? ReservationId { get; set; }
 
@@ -220,7 +196,5 @@ public class DB : DbContext
 
         // Navigation
         public Member Member { get; set; }
-        public Hotel Hotel { get; set; }
         public Reservation Reservation { get; set; }
     }
-}
