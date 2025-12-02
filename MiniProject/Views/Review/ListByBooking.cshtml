@@ -1,0 +1,57 @@
+﻿@model List<Assignment.Models.Review>
+@{
+    ViewBag.Title = "Reviews";
+}
+
+@if (Model.Any())
+{
+    @foreach (var review in Model)
+    { 
+        <h4>@review.Hotel.Name</h4>
+        <table class="table table-bordered detail mb-4">
+            <tr>
+                <th>Member</th>
+                <td>@review.MemberEmail</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>@review.Comment</td>
+            </tr>
+            <tr>
+                <th>Service</th>
+                <td>@review.ServiceRating / 5</td>
+            </tr>
+            <tr>
+                <th>Cleanliness</th>
+                <td>@review.CleanlinessRating / 5</td>
+            </tr>
+            <tr>
+                <th>Overall Rating</th>
+                <td><strong>@review.Rating / 5</strong></td>
+            </tr>
+            <tr>
+                <th>Date of Review</th>
+                <td>@review.CreatedAt.ToString("yyyy-MM-dd")</td>
+            </tr>
+            @if (User.Identity.Name == review.MemberEmail)
+            {
+                <tr>
+                    <th>More</th>
+                    <td>
+                        <section>
+                            <button class="update-btn" data-get="/Review/UpdateReview?Id=@review.Id">Update</button>
+                            <button class="delete-btn" data-get="/Review/DeleteReview?Id=@review.Id">Delete</button>
+                        </section>
+                   </td>
+                </tr>
+            }
+        </table>
+        <br />
+        <button class="back-btn" data-get="/Checkout/History">Back</button>
+
+    }
+}
+else
+{
+    <div class="alert alert-info">No reviews yet.</div>
+}

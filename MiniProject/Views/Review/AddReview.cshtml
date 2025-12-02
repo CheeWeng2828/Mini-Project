@@ -1,0 +1,302 @@
+﻿@model AddReviewVM
+@{
+    ViewBag.Title = "New Review";
+}
+<style>
+
+
+    h2 {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 300;
+        margin-bottom: 40px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        padding: 20px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+        h2 strong {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+    #notifySound {
+        display: none;
+    }
+
+    form {
+        background: rgba(255,255,255,0.95);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        max-width: 600px;
+        margin: 0 auto;
+        backdrop-filter: blur(10px);
+    }
+
+    input[type="hidden"] {
+        display: none;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 10px;
+        margin-top: 25px;
+    }
+
+        label:first-of-type {
+            margin-top: 0;
+        }
+
+    textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: inherit;
+        resize: vertical;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        box-sizing: border-box;
+    }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        textarea::placeholder {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        display: block;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+
+    br {
+        line-height: 1.5;
+    }
+
+    .rating-btn {
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        border: 2px solid #dee2e6;
+        color: #495057;
+        padding: 12px 18px;
+        margin: 5px;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+        .rating-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(45deg, #fff, #f8f9fa);
+        }
+
+    .clean-btn {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+        .clean-btn:hover {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-color: #28a745;
+        }
+
+    .service-btn {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+        .service-btn:hover {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border-color: #007bff;
+        }
+
+    .overall-btn {
+        border-color: #fd7e14;
+        color: #fd7e14;
+    }
+
+        .overall-btn:hover {
+            background: linear-gradient(45deg, #fd7e14, #e55100);
+            color: white;
+            border-color: #fd7e14;
+        }
+
+    button[type="submit"] {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        padding: 18px 40px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        margin-top: 30px;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+        button[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+    /* Rating sections spacing */
+    form > br + br {
+        display: none;
+    }
+
+    /* Better mobile responsiveness */
+    @@media (max-width: 768px) {
+        form
+
+    {
+        padding: 25px 20px;
+        margin: 10px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        padding: 15px;
+    }
+
+    .rating-btn {
+        padding: 10px 15px;
+        margin: 3px;
+    }
+
+    textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    }
+
+    .rating-btn.selected {
+        background: gold !important;
+        color: #333 !important;
+        border-color: #ffd700 !important;
+    }
+
+        .rating-btn.selected:hover {
+            background: gold !important;
+            color: #333 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+</style>
+<h2>@Model.HotelName</h2>
+
+@* addsound *@
+<audio id="notifySound" src="~/Sounds/ding-36029.mp3" preload="auto"></audio>
+
+
+<form asp-action="AddReview" asp-controller="Review" method="post" id="addreview">
+
+    <input type="hidden" asp-for="BookingId" />
+    <input type="hidden" asp-for="HotelId" />
+    <input type="hidden" asp-for="HotelName" />
+
+    <label asp-for="Comment">Reviews:</label><br>
+    <textarea asp-for="Comment" rows="4" cols="50" placeholder="Share your experience here .."></textarea><br>
+    <span asp-validation-for="Comment" class="text-danger"></span>
+    <br><br>
+
+    <label>Cleanliness</label><br>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <button type="button" class="rating-btn clean-btn" onclick="setRating(@i, 'CleanlinessRating', 'clean-btn')">@i</button>
+    }
+    <input type="hidden" asp-for="CleanlinessRating" id="CleanlinessRating" />
+    <span asp-validation-for="CleanlinessRating" class="text-danger"></span>
+    <br><br>
+
+    <label>Service</label><br>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <button type="button" class="rating-btn service-btn" onclick="setRating(@i, 'ServiceRating', 'service-btn')">@i</button>
+    }
+    <input type="hidden" asp-for="ServiceRating" id="ServiceRating" />
+    <span asp-validation-for="ServiceRating" class="text-danger"></span>
+    <br><br>
+
+    <label>Overall Rating</label><br>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <button type="button" class="rating-btn overall-btn" onclick="setRating(@i, 'Rating', 'overall-btn')">@i</button>
+    }
+    <input type="hidden" asp-for="Rating" id="Rating" />
+    <span asp-validation-for="Rating" class="text-danger"></span>
+    <br><br>
+
+    <button type="submit">Submit Review</button>
+</form>
+
+@section foot {
+    <script>
+        function setRating(value, fieldId, btnClass) {
+
+            document.getElementById(fieldId).value = value;
+            document.querySelectorAll('.' + btnClass).forEach(btn => 
+                {
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.classList.remove('selected');
+                });
+            for(let i = 0;i < value; i ++)
+            {
+                const btn = document.querySelectorAll('.' + btnClass)[i];
+                btn.style.background = 'gold';
+                btn.style.color = '#333';
+                btn.classList.add('selected');
+            }
+        }
+    </script>
+    <script>
+        const form = document.getElementById('addreview');
+        const sound = document.getElementById('notifySound');
+
+        form.addEventListener('submit', function (e) {
+            // Use jQuery unobtrusive validation to check client side validity
+            const validator = $(form).data('validator');
+            if (validator && !$(form).valid()) {
+                // if invalid, let the validation messages show, no sound
+                e.preventDefault();
+                return;
+            }
+
+            e.preventDefault();            // stop default submit for a moment
+            sound.currentTime = 0;         // rewind to start
+            sound.play().then(() => {
+                setTimeout(() => form.submit(), 250); // submit after sound
+            }).catch(() => form.submit()); // fallback if browser blocks autoplay
+        });
+    </script>
+
+}
