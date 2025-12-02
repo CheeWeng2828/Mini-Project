@@ -67,7 +67,7 @@
     @foreach(var (room,dates) in Model)
     {
         <tr>
-            <td>@room.Id (@room.TypeId)</td>
+            <td>@room.Id (@room.RoomTypeId)</td>
             @for(var d = min; d < max; d = d.AddDays(1))
             {
                 var cls = dates.Contains(d) ? "x" : "o";
@@ -77,7 +77,7 @@
     }
 </table>
 
-@foreach (var group in Model.GroupBy(m => m.Key.TypeId))
+@foreach (var group in Model.GroupBy(m => m.Key.RoomTypeId))
 {
     <p>
         Interest? Book <a href="/Reservation/Reserve/@group.Key">now</a> !!!

@@ -140,17 +140,13 @@ public class AddAdminVM
 public class AddTypeVM
 {
     [StringLength(1)]
-    [RegularExpression(@"^[A-Z]{1}", ErrorMessage = "Only One Upper Case Alphabet")]
+    [RegularExpression(@"^[A-Z]{3}", ErrorMessage = "Only One Upper Case Alphabet")]
     [Remote("CheckId", "RoomType", ErrorMessage = "Duplicated {0}.")]
 
     public string Id { get; set; }
 
     [StringLength(100)]
     public string Name { get; set; }
-
-    [StringLength(4)]
-    [Remote("CheckHotelId", "Room", ErrorMessage = "Invalid {0}.")]
-    public string HotelId { get; set; }
 
     [Range(1, 500)]
     public decimal Price { get; set; }
@@ -164,10 +160,6 @@ public class UpdateRoomTypeVm
 
     [StringLength(100)]
     public string Name { get; set; }
-
-    [StringLength(4)]
-    [Remote("CheckHotelId", "Room", ErrorMessage = "Invalid {0}.")]
-    public string HotelId { get; set; }
 
     [Range(1, 500)]
     public decimal Price { get; set; }
@@ -192,39 +184,7 @@ public class NewPasswordVM
     [Display(Name = "Confirm Password")]
     public string Confirm { get; set; }
 }
-// Branch
-public class UpdateBranchVM
-{
-    public string Id { get; set; }
 
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [StringLength(100)]
-    public string Location { get; set; }
-    public int State { get; set; }
-
-    public string? PhotoURL { get; set; }
-
-    [Display(Name = "New Photo")]
-    public IFormFile? Photo { get; set; }
-}
-public class AddBranchVM
-{
-    [Required]
-    [StringLength(4)]
-    public string Id { get; set; }
-    [Required]
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [Required]
-    [StringLength(100)]
-    public string Location { get; set; }
-
-    public int State { get; set; }
-    public IFormFile Photo { get; set; }
-}
 //Review
 public class AddReviewVM
 {

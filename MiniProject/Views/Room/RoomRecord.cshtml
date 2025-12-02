@@ -1,0 +1,113 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Room>
+@{
+    string[] fields = ["Id", "TypeId", "Name", "Price", "Branch Name", "Active"];
+    var typeId = Model.Select(r => r.RoomTypeId).FirstOrDefault();
+}
+
+<!-- To avoid Change Page Reset Input-->
+<form id="antiForgeryPlaceholder" style="display:none">
+    @Html.AntiForgeryToken()
+</form>
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+</p>
+<div id="target">
+    <table class="table">
+        <tr>
+            <!-- Add checkbox column header -->
+            <th>
+                <input type="checkbox" id="selectAll" />
+                <label for="selectAll">All</label>
+            </th>
+            @foreach (var f in fields)
+            {
+                string d = "asc";
+                string c = "";
+                if (f == ViewBag.Sort)
+                {
+                    d = ViewBag.Dir == "des" ? "asc" : "des";
+                    c = ViewBag.Dir;
+                }
+                <th>
+                    <a data-ajax="true"
+                       data-ajax-update="#target"
+                       data-ajax-loading="#loader"
+                       href="?typeId=@ViewBag.TypeId&name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a>
+                </th>
+            }
+            <th>More</th>
+        </tr>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <!-- Add checkbox for each row -->
+                <td>
+                    <input type="checkbox" class="row-checkbox" value="@r.Id" name="selectedIds" />
+                </td>
+                <td>@r.Id</td>
+                <td>@r.RoomTypeId</td>
+                <td>@r.RoomTypes.Name</td>
+                <td>@r.RoomTypes.Price</td>
+                <td>@r.Active</td>
+                <td>
+                    <button class="detail-btn" data-get="/Room/Detail/@r.Id">Detail</button>
+                    <button class="update-btn" data-get="/Room/UpdateRoom/@r.Id">Update</button>
+                    @if (r.Active == true)
+                    {
+                        <button class="delete-btn" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
+                    }
+                    else
+                    {
+                        <button class="new-btn" data-get="/Room/InactiveRoom/@r.Id">Active</button>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+<br>
+    <div id="bulk-actions" style="display: none; margin-bottom: 10px;">
+        <strong>Selected Actions:</strong>
+        <button class="bulk-btn" id="bulkActivate" type="button">Activate Selected</button>
+        <button class="bulk-btn" id="bulkDeactivate" type="button">Deactivate Selected</button>
+
+        <label style="margin-left:12px">Change type to:</label>
+        @Html.DropDownList(
+            "newTypeId",
+            (SelectList)ViewBag.RoomTypes ?? new SelectList(new List<SelectListItem>()),
+            "Select type",
+            new {id = "newTypeSelect",style = "margin-left:8px;min-width:160px;"}
+        )
+        <button class="bulk-btn" id="bulkUpdateType" type="button" style="margin-left:8px;">Update Type</button>
+
+        <span id="selected-count" style="margin-left: 20px;">0 selected</span>
+    </div>
+</div>
+
+@* <button class="new-btn" data-post="/Room/AddRoom?typeId=@typeId">New Room</button> *@
+<button class="new-btn" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
+<button class="back-btn" data-get="/RoomType/Index">Back</button>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+@Html.PagedListPager(
+Model,
+p => $"?typeId={ViewBag.TypeId}&name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

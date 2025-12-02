@@ -3,7 +3,7 @@ using X.PagedList.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 
-namespace Assignment.Controllers
+namespace MiniProject.Controllers
 {
     public class UserController : Controller
     {

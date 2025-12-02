@@ -1,0 +1,41 @@
+﻿@model Room
+
+@{
+    ViewBag.Title = "Room | Index";
+    var r = Model;
+    var photo = r.RoomTypes.RoomGalleries.Where(g => g.RoomTypeId == r.RoomTypeId).Select(g => g.PhotoURL).ToList();
+
+}
+
+<div class="slider">
+    <div class="slides">
+        @foreach (var g in photo)
+        {
+            <img class="slide" src="/room/@g">
+        }
+    </div>
+    <button class="prev" onclick="prevSlide()">&#10094;</button>
+    <button class="next" onclick="nextSlide()">&#10095;</button>
+
+</div>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <td>@r.Id</td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>@r.RoomTypes.Price</td>
+    </tr>
+    <tr>
+
+    </tr>
+    <tr>
+        <th>Type</th>
+        <td>@r.RoomTypes.Name</td>
+    </tr>
+
+</table>
+<br>
+<button class="back-btn" data-get="/Room/Index?typeId=@r.RoomTypeId">Index</button>

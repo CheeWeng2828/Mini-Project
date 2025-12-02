@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Room | Index";
+}
+
+@if (!User.IsInRole("Admin"))
+{
+    <form data-ajax="true"
+          data-ajax-update="#target"
+          data-ajax-loading="#loader"
+          id="f">
+        @Html.TextBox("name", "",
+        new { type = "search", autofocus = "", data_trim = "", placeholder = "Name"})
+
+    <button>Search</button>
+    <img src="/images/loader.gif" id="loader" style="display: none">
+</form>
+}
+
+
+<div id="target">
+    <partial name="RoomRecord" />
+</div>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}

@@ -195,6 +195,7 @@ public class ReservationController : Controller
                 {
                     Amount = room.RoomTypes.Price * (vm.CheckOut.DayNumber - vm.CheckIn.DayNumber),
                     ReservationId = rs.Id,
+                    Status = "Pending"
                 };
                 db.Payment.Add(py);
                 db.SaveChanges();

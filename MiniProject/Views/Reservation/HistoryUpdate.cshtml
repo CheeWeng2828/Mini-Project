@@ -32,11 +32,11 @@
         </tr>
         <tr>
             <th>Room</th>
-            <td>@rs.Room.Id (@rs.Room.Type.Id)</td>
+            <td>@rs.Room.Id (@rs.Room.RoomTypes.Id)</td>
         </tr>
         <tr>
             <th>Price</th>
-            <td>@rs.Room.Type.Price</td>
+            <td>@rs.Room.RoomTypes.Price</td>
         </tr>
         <tr>
             <th>Check In</th>
@@ -68,14 +68,14 @@
         <tr>
             <th>Action</th>
             <td>
-                @if (rs.Paid == true && rs.Payment.PaymentMethod == "Paypal")
+                @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "Paypal")
                 {
-                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.PaymentId">Refund</button>
+                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
                 }
 
-                @if (rs.Paid == true && rs.Payment.PaymentMethod == "E-Wallet")
+                @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "E-Wallet")
                 {
-                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.PaymentId">Refund</button>
+                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
                 }
             </td>
         </tr>
@@ -84,9 +84,9 @@
     <section>
         <button class="back-btn" data-get="Index">Back</button>
         <button class="update-btn" type="submit">Save</button>
-        @if(rs.CheckIn > currentDay && rs.Paid == true && rs.Payment.IsRefund == false)
+        @if(rs.CheckIn > currentDay && rs.Payment.Status == "Completed")
         {
-            <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.PaymentId">Refund</button>
+            <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
         }
     </section>
 </form>

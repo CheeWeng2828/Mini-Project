@@ -44,11 +44,11 @@
             <tr>
                 <td>@rs.Id</td>
                 <td>@rs.Member.Name (@rs.Member.Email)</td>
-                <td>@rs.Room.Id (@rs.Room.Type.Id)</td>
+                <td>@rs.Room.Id (@rs.Room.RoomTypes.Id)</td>
                 <td>@rs.CheckIn.ToString("yyyy-MM-dd")</td>
                 <td>@rs.CheckOut.ToString("yyyy-MM-dd")</td>
                 <td>@total</td>
-                <td>@(rs.Paid ? "Yes" : "No")</td>
+                <td>@rs.Payment.Status</td>
                 <td>@(rs.Active ? "Active" : "Inactive")</td>
                 <td>
                 <button class="detail-btn" data-get="/Reservation/Detail?Id=@rs.Id">Detail</button>

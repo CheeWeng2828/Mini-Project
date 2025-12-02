@@ -28,11 +28,11 @@
     </tr>
     <tr>
         <th>Room</th>
-        <td>@rs.Room.Id (@rs.Room.Type.Id)</td>
+        <td>@rs.Room.Id (@rs.Room.RoomTypes.Id)</td>
     </tr>
     <tr>
         <th>Price</th>
-        <td>@rs.Room.Type.Price</td>
+        <td>@rs.Room.RoomTypes.Price</td>
     </tr>
     <tr>
         <th>Check In</th>
@@ -53,7 +53,7 @@
 
     <tr>
         <th>Payment status</th>
-        <td>@(rs.Paid ? "Yes" : "No")</td>
+        <td>@rs.Payment.Status</td>
     </tr>
 </table>
 
@@ -67,7 +67,7 @@
     {
         <button class="back-btn" data-get="/Checkout/History">Back</button>
     }
-    @if(rs.Paid == false && rs.Payment.IsRefund == false && User.IsInRole("Member"))
+    @if(rs.Payment.Status == "Refund" && User.IsInRole("Member"))
     {
         <button class="checkout-btn" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
     }

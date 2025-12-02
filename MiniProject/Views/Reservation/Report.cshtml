@@ -14,81 +14,10 @@
 
     var totalSales = salesForType.Sum();
 }
-<style>
-    .table {
-        width: 60%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        background-color: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
 
-        .table th,
-        .table td {
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-            text-align: left;
-        }
-
-        .table th {
-            background-color: #f4f6f9;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .table tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .table tr:hover {
-            background-color: #f1f7ff;
-            transition: background 0.2s ease-in-out;
-        }
-
-        .table th[colspan="2"] {
-            text-align: center;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 15px;
-        }
-</style>
 
 <section><button class="back-btn" data-get="Index">Back</button></section>
-<div>
-    <table class="table">
-        <tr>
-            <th colspan="2" style="text-align:center">Detail</th>
-        </tr>
-        <tr>
-            <th colspan="2">Highest Sales</th>
-        </tr>
-        <tr>
-            <th>Room Type</th>
-            <td>@roomTypeName[maxIndex]</td>
-        </tr>
-        <tr>
-            <th>Amount</th>
-            <td>RM @maxValue</td>
-        </tr>
-        <tr>
-            <th colspan="2">Lowest Sales</th>
-        </tr>
-        <tr>
-            <th>Room Type</th>
-            <td>@roomTypeName[minIndex]</td>
-        </tr>
-        <tr>
-            <th>Amount</th>
-            <td>RM @minValue</td>
-        </tr>
-        <tr>
-            <th>Total Sales Amount</th>
-            <td>RM @totalSales</td>
-        </tr>
-    </table>
-</div>
+
 
 
 <h2>Chart :</h2>

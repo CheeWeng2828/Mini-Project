@@ -1,0 +1,53 @@
+﻿@model UpdateRoomVm
+
+@{
+    ViewBag.Title = "Room | Update Room Record";
+    var r = Model;
+
+}
+
+@* addsound *@
+<audio id="notifySound" src="~/Sounds/ding-36029.mp3" preload="auto"></audio>
+
+<form class="form" method="post" id="updateRoom">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label asp-for="Id"></label>
+    <b>@r.Id</b>
+
+    <label asp-for="TypeId">Type</label>
+    <select asp-for="TypeId" asp-items="ViewBag.CategoryList">
+        <option value="">- Select One -</option>
+    </select>
+    <span asp-validation-for="TypeId"></span>
+
+    <section>
+        <button class="update-btn">Update</button>
+        <button class="reset-btn" type="reset">Reset</button>
+        <button data-get="\Room\Index?typeId=@r.TypeId">Index</button>
+    </section><br>
+</form>
+
+
+@section foot {
+    <script>
+        const form = document.getElementById('updateRoom');
+        const sound = document.getElementById('notifySound');
+
+        form.addEventListener('submit', function (e) {
+             // check validility
+            const validator = $(form).data('validator');
+            if (validator && !$(form).valid()) {
+               //no valid->no sound
+                e.preventDefault();
+                return;
+            }
+
+            e.preventDefault();
+            sound.currentTime = 0;
+            sound.play().then(() => {
+                setTimeout(() => form.submit(), 250);
+            }).catch(() => form.submit());
+        });
+    </script>
+}
