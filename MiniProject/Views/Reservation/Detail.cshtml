@@ -1,0 +1,74 @@
+﻿@model Reservation
+
+@{
+    ViewBag.Title = "Order | Detail";
+
+    // Calculate days and total
+    var rs = Model;
+    var days = rs.CheckOut.DayNumber - rs.CheckIn.DayNumber;
+    var total = rs.Price * days;
+}
+<h2>Reservation Detail</h2>
+<table class="table detail">
+    <tr>
+        <th>Reservation Id</th>
+        <td>@rs.Id</td>
+    </tr>
+    <tr>
+        <th>Transaction ID</th>
+        <td>@rs.Payment.TransactionId</td>
+    </tr>
+    <tr>
+        <th>Payment Method</th>
+        <td>@rs.Payment.PaymentMethod</td>
+    </tr>
+    <tr>
+        <th>Member</th>
+        <td>@rs.Member.Name (@rs.Member.Email)</td>
+    </tr>
+    <tr>
+        <th>Room</th>
+        <td>@rs.Room.Id (@rs.Room.RoomTypes.Id)</td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>@rs.Room.RoomTypes.Price</td>
+    </tr>
+    <tr>
+        <th>Check In</th>
+        <td>@rs.CheckIn.ToString("yyyy-MM-dd")</td>
+    </tr>
+    <tr>
+        <th>Check Out</th>
+        <td>@rs.CheckOut.ToString("yyyy-MM-dd")</td>
+    </tr>
+    <tr>
+        <th>Days</th>
+        <td>@days</td>
+    </tr>
+    <tr>
+        <th>Total</th>
+        <td>@total</td>
+    </tr>
+
+    <tr>
+        <th>Payment status</th>
+        <td>@rs.Payment.Status</td>
+    </tr>
+</table>
+
+
+<p>
+    @if (User.IsInRole("Admin"))
+    {
+        <button class="back-btn" data-get="/Reservation/Index">Back</button>
+    }
+    @if (User.IsInRole("Member"))
+    {
+        <button class="back-btn" data-get="/Checkout/History">Back</button>
+    }
+    @if(rs.Payment.Status == "Refund" && User.IsInRole("Member"))
+    {
+        <button class="checkout-btn" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
+    }
+</p>

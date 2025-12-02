@@ -1,0 +1,89 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Reservation>
+
+@{
+    string[] fields = ["Id", "Member", "Room", "Check In", "Check Out", "Total", "Paid","Status"];
+}
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<button class="detail-btn" data-get="Report">Generate Report</button>
+<p>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+</p>
+
+<table class="table">
+    <tr>
+        @foreach (var f in fields)
+        {
+            string d = "asc";
+            string c = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir == "des" ? "asc" : "des";
+                c = ViewBag.Dir;
+            }
+
+            <th>
+                <a data-ajax="true"
+                   data-ajax-update="#target"
+                   data-ajax-loading="#loader"
+                   href="?name=@ViewBag.Name&startDate=@ViewBag.StartDate&endDate=@ViewBag.EndDate&sort=@f&dir=@d" class="@c">@f</a>
+            </th>
+        }
+        <th>More</th>
+    </tr>
+
+    @foreach (var rs in Model)
+    {
+        var total = rs.Payment.Amount;
+
+            <tr>
+                <td>@rs.Id</td>
+                <td>@rs.Member.Name (@rs.Member.Email)</td>
+                <td>@rs.Room.Id (@rs.Room.RoomTypes.Id)</td>
+                <td>@rs.CheckIn.ToString("yyyy-MM-dd")</td>
+                <td>@rs.CheckOut.ToString("yyyy-MM-dd")</td>
+                <td>@total</td>
+                <td>@rs.Payment.Status</td>
+                <td>@(rs.Active ? "Active" : "Inactive")</td>
+                <td>
+                <button class="detail-btn" data-get="/Reservation/Detail?Id=@rs.Id">Detail</button>
+                <button class="update-btn" data-get="/Reservation/Update?Id=@rs.Id">Update</button>
+                @if(rs.Active)
+                {
+                    <button class="delete-btn" data-get="/Reservation/Active?id=@rs.Id">Inactive</button>
+                }
+                else
+                {
+                    <button class="new-btn" data-get="/Reservation/Active?id=@rs.Id">Active</button>
+                }
+                </td>
+            </tr>
+    }
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+
+}
+
+@Html.PagedListPager(
+Model,
+p => $"?name={ViewBag.Name}&startDate={ViewBag.StartDate}&endDate={ViewBag.EndDate}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)
