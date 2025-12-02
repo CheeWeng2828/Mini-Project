@@ -67,7 +67,7 @@
     {
         <button class="back-btn" data-get="/Checkout/History">Back</button>
     }
-    @if(rs.Payment.Status == "Refund" && User.IsInRole("Member"))
+    @if(rs.Payment.Status == "Pending" && User.IsInRole("Member"))
     {
         <button class="checkout-btn" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
     }

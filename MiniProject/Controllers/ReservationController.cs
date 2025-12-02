@@ -200,12 +200,6 @@ public class ReservationController : Controller
                 db.Payment.Add(py);
                 db.SaveChanges();
 
-                db.Reservations.Where(r => r.Id == rs.Id)
-                          .ExecuteUpdate(s => s
-                          .SetProperty(r => r.Payment.Id, py.Id));
-
-                db.SaveChanges();
-
                 TempData["Info"] = "Room reserved.";
                 return RedirectToAction("Detail", new { rs.Id });
             }
@@ -316,7 +310,7 @@ public class ReservationController : Controller
 
         var reservation = db.Reservations
                             .Include(rs => rs.Room)
-                                .ThenInclude(rs => rs.RoomTypeId)
+                                .ThenInclude(rs => rs.RoomTypes)
                             .Where(rs => rs.Room.RoomTypeId == id && min < rs.CheckOut &&
                                          rs.CheckIn < max && rs.Active == true);
 
