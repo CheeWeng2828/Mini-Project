@@ -43,8 +43,8 @@ public class ReservationController : Controller
             "Check In" => r => r.CheckIn.ToString("yyyy-MM-dd"),
             "Check Out" => r => r.CheckOut.ToString("yyyy-MM-dd"),
             "Total" => r => r.Payment.Amount,
-            "Paid" => r => r.Payment.Status,
-            "Status" => r => r.Active ? "Active" : "Inactive",
+            "Payment Status" => r => r.Payment.Status,
+            "Order Status" => r => r.Active ? "Active" : "Inactive",
             _ => r => r.Id
         };
 
