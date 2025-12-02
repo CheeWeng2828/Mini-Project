@@ -2,15 +2,7 @@
 @using X.PagedList.Mvc.Core
 @model IPagedList<Room>
 @{
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    string[] fields = ["Id", "TypeId", "Name", "Price", "Branch Name", "Active"];
-=======
     string[] fields = ["Id", "TypeId", "Name", "Price", "Active"];
->>>>>>> Stashed changes
-=======
-    string[] fields = ["Id", "TypeId", "Name", "Price", "Active"];
->>>>>>> Stashed changes
     var typeId = Model.Select(r => r.RoomTypeId).FirstOrDefault();
 }
 
