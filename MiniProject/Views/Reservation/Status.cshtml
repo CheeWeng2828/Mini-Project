@@ -1,0 +1,77 @@
+﻿@model Dictionary<Room, List<DateOnly>>
+
+@{
+    ViewBag.Title = "Reservation | Status";
+
+    // Min = First day of the month
+    // Max = First day of next month
+    DateOnly min = ViewBag.Min;
+    DateOnly max = ViewBag.Max;
+}
+
+@section head {
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table caption {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        td, th {
+            border: 1px solid #999;
+            padding: 5px;
+        }
+
+        .x {
+            background: tomato;
+        }
+
+        .o {
+            background: lightgreen;
+        }
+    </style>
+}
+
+<p>
+    @* Generate links for previous, current and next months *@
+    @for(int n = -1; n <= 1; n++)
+    {
+        if(n > -1)
+        {
+            <text>|</text>
+        }
+
+        var d = DateTime.Today.AddMonths(n);
+        <a href="?month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
+    }
+</p>
+
+<table>
+    <caption>@min.ToString("MMMM yyyy")</caption>
+
+    <tr>
+        <th></th>
+        @* Generate headers (dates) *@
+        @for(var d = min; d < max; d = d.AddDays(1))
+        {
+            <th>@d.ToString("dd")</th>
+        }
+    </tr>
+
+    @* Generate contents (class = x or o) *@
+    @foreach(var (room,dates) in Model)
+    {
+        <tr>
+            <td>@room.Id (@room.TypeId)</td>
+            @for(var d = min; d < max; d = d.AddDays(1))
+            {
+                var cls = dates.Contains(d) ? "x" : "o";
+                <td class="@cls"></td>
+            }
+        </tr>
+    }
+</table>

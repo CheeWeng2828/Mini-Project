@@ -1,0 +1,92 @@
+﻿@model Reservation
+
+@{
+    ViewBag.Title = "Order | Update";
+
+    var rs = Model;
+    var days = rs.CheckOut.DayNumber - rs.CheckIn.DayNumber;
+    var total = rs.Price * days;
+    var currentDay = DateOnly.FromDateTime(DateTime.Now);
+
+}
+
+<form asp-action="Update" asp-controller="Reservation" method="post">
+    <input type="hidden" name="Id" value="@rs.Id" />
+
+    <table class="table detail">
+        <tr>
+            <th>Id</th>
+            <td>@rs.Id</td>
+        </tr>
+        <tr>
+            <th>Transaction ID</th>
+            <td>@rs.Payment.TransactionId</td>
+        </tr>
+        <tr>
+            <th>Payment Method</th>
+            <td>@rs.Payment.PaymentMethod</td>
+        </tr>
+        <tr>
+            <th>Member</th>
+            <td>@rs.Member.Name (@rs.Member.Email)</td>
+        </tr>
+        <tr>
+            <th>Room</th>
+            <td>@rs.Room.Id (@rs.Room.Type.Id)</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>@rs.Room.Type.Price</td>
+        </tr>
+        <tr>
+            <th>Check In</th>
+            <td>@rs.CheckIn.ToString("yyyy-MM-dd")</td>
+        </tr>
+        <tr>
+            <th>Check Out</th>
+            <td>@rs.CheckOut.ToString("yyyy-MM-dd")</td>
+        </tr>
+        <tr>
+            <th>Days</th>
+            <td>@days</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>@total</td>
+        </tr>
+        @* <tr>
+            <th>Paid</th>
+            <td>
+                <select name="Paid" class="form-select">
+                    <option value="true"
+                            selected="@(Model.Paid)">Yes</option>
+                    <option value="false"
+                            selected="@(!Model.Paid)">No</option>
+                </select>
+            </td>
+        </tr> *@
+        <tr>
+            <th>Action</th>
+            <td>
+                @if (rs.Paid == true && rs.Payment.PaymentMethod == "Paypal")
+                {
+                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.PaymentId">Refund</button>
+                }
+
+                @if (rs.Paid == true && rs.Payment.PaymentMethod == "E-Wallet")
+                {
+                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.PaymentId">Refund</button>
+                }
+            </td>
+        </tr>
+    </table>
+
+    <section>
+        <button class="back-btn" data-get="Index">Back</button>
+        <button class="update-btn" type="submit">Save</button>
+        @if(rs.CheckIn > currentDay && rs.Paid == true && rs.Payment.IsRefund == false)
+        {
+            <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.PaymentId">Refund</button>
+        }
+    </section>
+</form>
