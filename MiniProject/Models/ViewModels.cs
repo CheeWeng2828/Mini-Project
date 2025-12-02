@@ -139,8 +139,17 @@ public class AddAdminVM
 
 public class AddTypeVM
 {
+<<<<<<< Updated upstream
     [StringLength(1)]
+<<<<<<< Updated upstream
     [RegularExpression(@"^[A-Z]{3}", ErrorMessage = "Only One Upper Case Alphabet")]
+=======
+    [RegularExpression(@"^[A-Z]{1}", ErrorMessage = "Only One Upper Case Alphabet")]
+=======
+    [StringLength(3)]
+    [RegularExpression(@"^[A-Z]{3}", ErrorMessage = "Only Three Upper Case Alphabet")]
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     [Remote("CheckId", "RoomType", ErrorMessage = "Duplicated {0}.")]
 
     public string Id { get; set; }
