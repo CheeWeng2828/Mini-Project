@@ -56,15 +56,15 @@
                 <td>@r.RoomTypes.Price</td>
                 <td>@r.Active</td>
                 <td>
-                    <button class="detail-btn" data-get="/Room/Detail/@r.Id">Detail</button>
-                    <button class="update-btn" data-get="/Room/UpdateRoom/@r.Id">Update</button>
+                    <button class="btn btn-info" data-get="/Room/Detail/@r.Id">Detail</button>
+                    <button class="btn btn-warning" data-get="/Room/UpdateRoom/@r.Id">Update</button>
                     @if (r.Active == true)
                     {
-                        <button class="delete-btn" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
+                        <button class="btn btn-danger" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
                     }
                     else
                     {
-                        <button class="new-btn" data-get="/Room/InactiveRoom/@r.Id">Active</button>
+                        <button class="btn btn-success" data-get="/Room/InactiveRoom/@r.Id">Active</button>
                     }
                 </td>
             </tr>
@@ -90,8 +90,8 @@
 </div>
 
 @* <button class="new-btn" data-post="/Room/AddRoom?typeId=@typeId">New Room</button> *@
-<button class="new-btn" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
-<button class="back-btn" data-get="/RoomType/Index">Back</button>
+<button class="btn btn-success" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
+<button class="btn btn-light" data-get="/RoomType/Index">Back</button>
 
 @{
     var options = PagedListRenderOptions.ClassicPlusFirstAndLast;

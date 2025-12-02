@@ -44,7 +44,7 @@
             <td>@t.Name</td>
             <td>@t.Price</td>
             <td>
-                <button class="update-btn" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
+                <button class="btn btn-warning" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
                 @if (t.Rooms.Any(r => r.RoomTypeId == t.Id))
                 {
                     <button class="detail-btn" data-get="/Room/Index?typeId=@t.Id">Room List</button>
