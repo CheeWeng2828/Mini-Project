@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Reservation>
+
+@{
+    ViewBag.Title = "My Bookings Lists";
+    
+}
+<br>
+<strong>- A refund can only be made if the cancellation is at least 3 days before the check-in date.</strong><br>
+<strong>- Guests are allowed to submit a review only after their check-out date has passed.</strong><br>
+<table class="table">
+
+    <tr>
+        <th>Id</th>
+        <th>Member</th>
+        <th>Room</th>
+        <th>Price</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Days</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+
+    @foreach (var rs in Model)
+    {
+        // Calculate days and total
+        var days = rs.CheckOut.DayNumber - rs.CheckIn.DayNumber;
+        var total = rs.Price * days;
+        var currentDay = DateOnly.FromDateTime(DateTime.Now);
+        var refundpolicy = (rs.CheckOut.DayNumber - currentDay.DayNumber);
+
+
+        <tr>
+            <td>@rs.Id</td>
+            <td>@rs.Member.Name (@rs.Member.Email)</td>
+            <td>@rs.Room.Id (@rs.Room.Type.Id)</td>
+            <td>@rs.Price</td>
+            <td>@rs.CheckIn.ToString("yyyy-MM-dd")</td>
+            <td>@rs.CheckOut.ToString("yyyy-MM-dd")</td>
+            <td>@days</td>
+            <td>@total</td>
+            @if (rs.Payment.IsRefund == true)
+            {
+                <td>Refund</td>
+            }
+            @if (rs.Paid == true)
+            {
+                <td>Paid</td>
+            }
+            @if(rs.Paid == false && rs.Payment.IsRefund == false)
+            {
+                <td>Pending</td>
+            }
+            <td>
+                @if(rs.Paid == true)
+                {
+                    <button class="detail-btn" data-get="/Reservation/Detail?Id=@rs.Id">Detail</button>
+                }
+
+                @if (rs.Review != null && rs.Review.ReservationId == rs.Id)
+                {
+                    <button class="detail-btn" data-get="/Review/ListByBooking?bookingId=@rs.Id">View Review</button>
+                }
+
+                @if (rs.Review == null && rs.Paid == true && rs.CheckOut < currentDay)
+                {
+                    <button class="update-btn" data-get="/Review/AddReview?bookingId=@rs.Id">Leave a Review</button>
+                }
+
+                @if (rs.Paid == true && refundpolicy > 3 && rs.Payment.PaymentMethod == "Paypal")
+                {
+                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.PaymentId">Refund</button>
+                }
+
+                @if (rs.Paid == true && refundpolicy > 3 && rs.Payment.PaymentMethod == "E-Wallet")
+                {
+                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.PaymentId">Refund</button>
+                }
+
+                @if (rs.Paid != false && rs.Payment.IsRefund != false)
+                {
+                    <button class="checkout-btn" data-get="/Payment/Index?id=@rs.Id">Checkout</button>
+                }
+
+
+                @if (rs.Paid == false && rs.Payment.IsRefund == true)
+                {
+                    <button class="delete-btn" data-get="/Checkout/Refund?paymentId=@rs.Payment.Id">Refund Detail</button>
+                }
+
+            </td>
+        </tr>
+    }
+</table>

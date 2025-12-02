@@ -1,0 +1,102 @@
+﻿@model Refund
+@{
+    ViewBag.Title = "Process Refund";
+}
+<style>
+    /* Uses only classes/ids you already provided in the markup */
+    /* Card / container */
+    .container.mt-4 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .row.justify-content-center {
+        --bs-justify-content: center;
+    }
+
+    /* Slightly larger column max width on wide screens while keeping Bootstrap col behavior */
+    .col-md-6 {
+        max-width: 720px; /* keep card comfortable width */
+    }
+
+    /* Blue themed card */
+    .card {
+        border-radius: 12px;
+        border: 1px solid rgba(29,78,216,0.10); /* subtle blue border */
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    /* Header — material/Google-like blue */
+    .card-header {
+        background: linear-gradient(90deg,#1d4ed8 0%,#2563eb 100%);
+        color: #fff;
+        padding: 14px 18px;
+        font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+        font-weight: 600;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    /* Body spacing and typography */
+    .card-body {
+        padding: 18px;
+        font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+        color: #0f172a;
+    }
+
+        /* Keep the Payment fields neat — using paragraph + strong that's already in your markup */
+        .card-body p {
+            margin: 0 0 12px 0;
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+            flex-wrap: wrap;
+        }
+
+            .card-body p strong {
+                width: 140px; /* label column */
+                color: #475569; /* muted label color */
+                font-weight: 700;
+                font-size: 0.95rem;
+            }
+</style>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Process Refund</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Payment ID:</strong> @Model.PaymentId</p>
+                    <p><strong>Refund Amount:</strong> RM @Model.Amount.ToString("F2")</p>
+
+                    <form id="refundForm" method="POST" asp-action="ProcessRefund" asp-controller="Checkout">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="PaymentId" />
+                        <input type="hidden" asp-for="Amount" />
+
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="back-btn" onclick="window.history.back()">Cancel</button>
+                            <button type="submit" class="delete-btn" id="confirmRefund">Confirm Refund</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('refundForm').addEventListener('submit', function() {
+        // Show processing modal
+        $('#processingModal').modal('show');
+
+        // Disable the submit button to prevent double submission
+        document.getElementById('confirmRefund').disabled = true;
+    });
+</script>
