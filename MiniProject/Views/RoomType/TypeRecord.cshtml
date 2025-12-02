@@ -3,7 +3,11 @@
 @model IPagedList<RoomType>
 
 @{
+<<<<<<< Updated upstream
     string[] fields = ["Id", "Name", "Price", "Branch Name", "Active"];
+=======
+    string[] fields = ["Id", "Name", "Price"];
+>>>>>>> Stashed changes
 }
 
 @Html.Hidden("sort", "", new { form = "f" })

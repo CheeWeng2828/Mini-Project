@@ -149,6 +149,9 @@ public class AddTypeVM
     [StringLength(3)]
     [RegularExpression(@"^[A-Z]{3}", ErrorMessage = "Only Three Upper Case Alphabet")]
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     [Remote("CheckId", "RoomType", ErrorMessage = "Duplicated {0}.")]
 
