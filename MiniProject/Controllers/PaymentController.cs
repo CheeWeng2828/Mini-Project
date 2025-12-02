@@ -97,7 +97,7 @@ public class PaymentController : Controller
     {
         var reservation = db.Reservations
             .Include(r => r.Room)
-                .ThenInclude(rm => rm.Type)
+                .ThenInclude(rm => rm.RoomTypes)
             .FirstOrDefault(r => r.Id == reservationId);
 
         if (reservation == null)
@@ -112,20 +112,17 @@ public class PaymentController : Controller
         {
             ReservationId = reservationId,
             Amount = total,
-            MemberEmail = User?.Identity?.Name ?? reservation.MemberEmail,
             PaymentMethod = "E-Wallet",
+            Status = "Completed",
             TransactionId = paymentId,
         };
         db.Payment.Add(payment);
         db.SaveChanges();
-
-        reservation.PaymentId = payment.Id;
-        reservation.Paid = true;
         reservation.Active = true;
 
         db.SaveChanges();
 
-        ReceiptEmail(reservation.MemberEmail, reservation);
+        ReceiptEmail(User.Identity.Name, reservation);
 
         return Json(new
         {
@@ -140,11 +137,10 @@ public class PaymentController : Controller
         var reservation = db.Reservations
             .Include(r => r.Payment)
             .Include(r => r.Room)
-            .ThenInclude(rm => rm.Type)
-            .ThenInclude(t => t.Hotel)
+            .ThenInclude(rm => rm.RoomTypes)
             .FirstOrDefault(r => r.Id == Id);
 
-        if(reservation == null || !reservation.Paid)
+        if(reservation == null || reservation.Payment.Status == "Pending")
         {
             TempData["Info"] = "Payment Not Found Or Incomplete";
             return RedirectToAction("Index", "Home");
@@ -158,7 +154,7 @@ public class PaymentController : Controller
         var payment = db.Payment.FirstOrDefault(p => p.Id == paymentId);
 
 
-        if (payment != null && payment.IsRefund == true)
+        if (payment != null && payment.Status == "Refund")
         {
             TempData["Info"] = "Not Refund Record Exist";
             return RedirectToAction("History","Checkout");
@@ -182,19 +178,18 @@ public class PaymentController : Controller
         var reservation = db.Reservations
             .Include(r => r.Payment)
             .Include(r => r.Room)
-                .ThenInclude(rm => rm.Type)
+                .ThenInclude(rm => rm.RoomTypes)
             .First(r => r.Id == reservationId);
 
-        payment.IsRefund = true;
+        payment.Status = "Refund";
         payment.RefundDate = DateTime.UtcNow;
         payment.RefundId = Guid.NewGuid().ToString();
         db.SaveChanges();
 
-        rs.Paid = false;
         rs.Active = false;
         db.SaveChanges();
 
-        RefundEmail(reservation.MemberEmail, reservation);
+        RefundEmail(User.Identity.Name, reservation);
         TempData["Info"] = "Refund Successfully";
         return RedirectToAction("Refund","Checkout" ,new { paymentId = payment.Id });
 
@@ -205,9 +200,9 @@ public class PaymentController : Controller
     {
         User u = db.Users.Find(email)!;
 
-        var roomName = reservation.Room.Type.Name;
+        var roomName = reservation.Room.RoomTypes.Name;
         var totalAmount = reservation.Payment.Amount;
-        var paymentId = reservation.PaymentId;
+        var paymentId = reservation.Payment.Id;
         var checkIn = reservation.CheckIn;
         var checkOut = reservation.CheckOut;
         var paymentMethod = reservation.Payment.PaymentMethod;
@@ -275,13 +270,13 @@ public class PaymentController : Controller
     {
         User u = db.Users.Find(email)!;
 
-        var roomName = reservation.Room.Type.Name;
+        var roomName = reservation.Room.RoomTypes.Name;
         var totalAmount = reservation.Payment.Amount;
-        var paymentId = reservation.PaymentId;
+        var paymentId = reservation.Payment.Id;
         var checkIn = reservation.CheckIn;
         var checkOut = reservation.CheckOut;
         var paymentMethod = reservation.Payment.PaymentMethod;
-        var refundStatus = reservation.Payment.IsRefund ? "Complete" : "Pending";
+        var refundStatus = reservation.Payment.Status;
         var refundTime = reservation.Payment.RefundDate;
         var refundId = reservation.Payment.RefundId;
 
