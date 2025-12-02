@@ -150,6 +150,9 @@ public class AddTypeVM
     [RegularExpression(@"^[A-Z]{3}", ErrorMessage = "Only Three Upper Case Alphabet")]
 >>>>>>> Stashed changes
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
