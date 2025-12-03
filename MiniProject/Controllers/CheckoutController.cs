@@ -229,18 +229,18 @@ namespace Assignment.Controllers
             var payment = db.Payment.First(p => p.ReservationId == reservationId);
 
             var reservation = db.Reservations
-                .Include(r => r.Room.Type)
+                .Include(r => r.Room.RoomTypes)
                 .Include(r => r.Payment)
                 .First(r => r.Id == payment.ReservationId);
-            reservation.Paid = true;
 
             if (!string.IsNullOrEmpty(vm.PaypalCaptureId))
             {
                 payment.TransactionId = vm.PaypalCaptureId;
                 payment.PaymentMethod = "Paypal";
+                payment.Status = "Completed";
             }
 
-            var email = db.Payment.Where(p => p.MemberEmail == payment.MemberEmail).Select(p => p.MemberEmail).First();
+            var email = db.Users.Where(u => u.Id == reservation.MemberId).Select(u => u.Email).First();
 
             db.SaveChanges();
             ReceiptEmail(email, reservation);
@@ -259,7 +259,7 @@ namespace Assignment.Controllers
                 return RedirectToAction("History");
             }
 
-            if (payment.IsRefund)
+            if (payment.Status == "Refund")
             {
                 TempData["Info"] = "This payment has already been refunded";
                 return RedirectToAction("History");
@@ -292,7 +292,7 @@ namespace Assignment.Controllers
                     TempData["Info"] = "Payment not found or Paypal Capture ID missing";
                     return RedirectToAction("History");
                 }
-                if (payment.IsRefund)
+                if (payment.Status == "Refund")
                 {
                     TempData["Info"] = "This payment has already been refunded";
                     return RedirectToAction("History");
@@ -373,25 +373,25 @@ namespace Assignment.Controllers
                         using var transaction = db.Database.BeginTransaction();
                         try
                         {
-                            payment.IsRefund = true;
+                            payment.Status = "Refund";
                             payment.RefundDate = DateTime.UtcNow;
                             payment.RefundId = refundId;
 
                             var reservation = db.Reservations
                                 .Include(r => r.Payment)
                                 .Include(r => r.Room)
-                                    .ThenInclude(rm => rm.Type)
-                                .FirstOrDefault(r => r.PaymentId == payment.Id);
+                                    .ThenInclude(rm => rm.RoomTypes)
+                                .FirstOrDefault(r => r.Id == payment.ReservationId);
                             if (reservation != null)
                             {
-                                reservation.Paid = false;
                                 reservation.Active = false;
                             }
 
                             db.SaveChanges();
                             transaction.Commit();
 
-                            RefundEmail(reservation.MemberEmail, reservation);
+                            var email = db.Users.Where(u => u.Id == reservation.MemberId).Select(u => u.Email).First();
+                            RefundEmail(email, reservation);
                             TempData["Info"] = "Refund processed successfully";
                             return RedirectToAction("Refund", new { paymentId = payment.Id });
                         }
@@ -423,7 +423,7 @@ namespace Assignment.Controllers
             var r = db.Payment
                 .Where(p => p.Id == paymentId).FirstOrDefault();
 
-            if (r != null && r.IsRefund == false)
+            if (r != null && r.Status == "Completed")
             {
                 TempData["Info"] = "Not Refund Record Exist";
                 return RedirectToAction("History");
@@ -433,24 +433,24 @@ namespace Assignment.Controllers
         }
         public IActionResult History()
         {
+            var user = db.Users.First(u => u.Email == User!.Identity!.Name);
             var m = db.Reservations
                       .Include(rs => rs.Payment)
                       .Include(rs => rs.Member)
                       .Include(m => m.Review)
                       .Include(rs => rs.Room)
-                        .ThenInclude(rm => rm.Type)
-                        .ThenInclude(t => t.Hotel)
-                      .Where(rs => rs.MemberEmail == User!.Identity!.Name);
+                        .ThenInclude(rm => rm.RoomTypes)
+                      .Where(rs => rs.MemberId == user.Id);
 
             return View(m);
         }
         private void ReceiptEmail(string email, Reservation reservation)
         {
-            User u = db.Users.Find(email)!;
+            User u = db.Users.First(u => u.Email == email)!;
 
-            var roomName = reservation.Room.Type.Name;
+            var roomName = reservation.Room.RoomTypes.Name;
             var totalAmount = reservation.Payment.Amount;
-            var paymentId = reservation.PaymentId;
+            var paymentId = reservation.Payment.Id;
             var checkIn = reservation.CheckIn;
             var checkOut = reservation.CheckOut;
             var paymentMethod = reservation.Payment.PaymentMethod;
@@ -518,13 +518,13 @@ namespace Assignment.Controllers
         {
             User u = db.Users.Find(email)!;
 
-            var roomName = reservation.Room.Type.Name;
+            var roomName = reservation.Room.RoomTypes.Name;
             var totalAmount = reservation.Payment.Amount;
-            var paymentId = reservation.PaymentId;
+            var paymentId = reservation.Payment.Id;
             var checkIn = reservation.CheckIn;
             var checkOut = reservation.CheckOut;
             var paymentMethod = reservation.Payment.PaymentMethod;
-            var refundStatus = reservation.Payment.IsRefund ? "Complete" : "Pending";
+            var refundStatus = reservation.Payment.Status;
             var refundTime = reservation.Payment.RefundDate;
             var refundId = reservation.Payment.RefundId;
 

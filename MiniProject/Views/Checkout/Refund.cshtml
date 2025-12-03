@@ -80,7 +80,7 @@
     <tr>
         <th scope="row">Refund Status</th>
         <td>
-            @if (Model.IsRefund)
+            @if (Model.Status == "Refund")
             {
                 <span class="status-pill status-success">Success</span>
             }
