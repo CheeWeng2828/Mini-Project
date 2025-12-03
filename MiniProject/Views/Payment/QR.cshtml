@@ -1,0 +1,281 @@
+﻿@{
+    ViewBag.Title = "Payment - Hotel Booking System";
+}
+<style>
+    /* container + card */
+    .container {
+        max-width: 720px;
+        margin: 34px auto;
+        padding: 12px;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    .payment-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+        border: 1px solid #eee;
+    }
+
+        /* header */
+        .payment-card h2 {
+            margin: 0 0 6px 0;
+            font-size: 1.25rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+    .text-muted {
+        color: #6b7280;
+        margin: 0 0 10px 0;
+    }
+
+    /* amount */
+    .amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+
+    /* buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background: #0b72ff;
+        color: #fff;
+        border-color: #0b72ff;
+    }
+
+    .btn-success {
+        background: #10b981;
+        color: #fff;
+        border-color: #10b981;
+    }
+
+    .btn-outline-secondary {
+        background: transparent;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+    .btn-lg {
+        font-size: 1rem;
+        padding: 12px 18px;
+    }
+
+    /* spinner / qr area */
+    .spinner {
+        text-align: center;
+        color: #6b7280;
+    }
+
+        .spinner .spinner-border {
+            width: 36px;
+            height: 36px;
+            border-width: 4px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-bottom: 8px;
+        }
+
+    /* qr display */
+    .qr-code {
+        text-align: center;
+        margin: 12px 0;
+    }
+
+    .qr-image {
+        max-width: 260px;
+        width: 100%;
+        height: auto;
+        border: 1px solid #eee;
+        padding: 8px;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    /* success */
+    .success-message {
+        text-align: center;
+        padding: 18px 0;
+    }
+
+    /* small screens: escaped so Razor won't try to parse media */
+    @@media (max-width: 520px) {
+        .container
+
+    {
+        padding: 8px;
+    }
+
+    .qr-image {
+        max-width: 180px;
+    }
+
+    .amount {
+        font-size: 1.25rem;
+    }
+
+    .payment-card {
+        padding: 12px;
+    }
+
+    }
+</style>
+
+    <div class="container">
+        <div class="payment-card">
+            <!-- Header -->
+            <h2><i class="fas fa-credit-card text-primary"></i> Pay Now</h2>
+            <p class="text-muted">Reservation #@ViewBag.rsId</p>
+
+            <!-- Amount -->
+            <div class="amount">RM @ViewBag.Amount</div>
+            <p class="text-muted">Total Amount</p>
+
+            <!-- Generate QR Button -->
+            <div id="generateSection">
+                <button class="btn btn-pay btn-primary btn-lg" onclick="showQR()">
+                    <i class="fas fa-qrcode"></i> Show QR Code
+                </button>
+            </div>
+
+            <!-- QR Code Section -->
+            <div id="qrSection" style="display: none;">
+                <!-- Loading -->
+                <div class="spinner" id="loading">
+                    <div class="spinner-border text-primary mb-3"></div>
+                    <p>Generating QR Code...</p>
+                </div>
+
+                <!-- QR Code Display -->
+                <div id="qrDisplay" style="display: none;">
+                    <div class="qr-code">
+                        <img id="qrImage" src="" alt="QR Code" class="qr-image">
+                    </div>
+
+                    <div class="payment-info">
+                        <h5><i class="fas fa-mobile-alt text-success"></i> Scan with your banking app</h5>
+                        <p class="mb-0">Open your banking app and scan the QR code above</p>
+                    </div>
+
+                    <button class="btn btn-success btn-lg" onclick="confirmPayment()">
+                        <i class="fas fa-check"></i> I've Paid
+                    </button>
+
+                    <br><br>
+                    <button class="btn btn-outline-secondary" onclick="showQR()">
+                        <i class="fas fa-sync"></i> New QR Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success Section -->
+            <div id="successSection" style="display: none;">
+                <div class="success-message">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h3 class="text-success">Payment Successful!</h3>
+                    <p>Redirecting to confirmation page...</p>
+                </div>
+            </div>
+
+            <!-- Back Link -->
+            <div class="mt-4">
+                <a href="@Url.Action("Index", "Home")" class="text-muted">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let paymentId = null;
+        const reservationId = @ViewBag.rsId;
+        const amount = @ViewBag.Amount;
+
+        function showQR() {
+            $('#generateSection').hide();
+            $('#qrSection').show();
+            $('#loading').show();
+            $('#qrDisplay').hide();
+
+            // Generate QR Code
+            $.ajax({
+                url: '@Url.Action("GenerateQRCode", "Payment")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    reservationId: reservationId,
+                    amount: amount
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        $('#qrImage').attr('src', response.qrCode);
+                        paymentId = response.paymentId;
+                        $('#loading').hide();
+                        $('#qrDisplay').show();
+                    } else {
+                        alert('Failed to generate QR code. Please try again.');
+                        backToStart();
+                    }
+                },
+                error: function() {
+                    alert('Error generating QR code. Please try again.');
+                    backToStart();
+                }
+            });
+        }
+
+        function confirmPayment() {
+            if (!paymentId) {
+                alert('Please generate a QR code first.');
+                return;
+            }
+
+            if (confirm('Have you completed the payment?')) {
+                // Verify Payment
+                $.ajax({
+                    url: '@Url.Action("VerifyPayment", "Payment")',
+                    type: 'POST',
+                    data: {
+                        paymentId: paymentId,
+                        reservationId: reservationId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            showSuccess();
+                            setTimeout(() => {
+                                window.location.href = response.redirectUrl;
+                            }, 2000);
+                        } else {
+                            alert(response.message || 'Payment verification failed.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error verifying payment. Please try again.');
+                    }
+                });
+            }
+        }
+
+        function showSuccess() {
+            $('#qrSection').hide();
+            $('#successSection').show();
+        }
+
+        function backToStart() {
+            $('#qrSection').hide();
+            $('#generateSection').show();
+        }
+    </script>
