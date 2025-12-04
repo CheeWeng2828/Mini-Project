@@ -465,176 +465,6 @@ img.displaySlide {
         box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
     }
 
-/* All Button */
-.checkout-btn {
-    background: linear-gradient(135deg, #4CAF50, #2E7D32); /* green gradient */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 16px; /* smaller padding */
-    border: none;
-    border-radius: 8px; /* softer corners */
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-    .checkout-btn:hover {
-        background: linear-gradient(135deg, #43A047, #1B5E20);
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .checkout-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-.back-btn {
-    background: #f1f1f1;
-    color: #333;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-    .back-btn:hover {
-        background: #e0e0e0;
-        border-color: #bbb;
-    }
-
-    .back-btn:active {
-        background: #d6d6d6;
-        transform: scale(0.97);
-    }
-
-.detail-btn {
-    background: #2196F3; /* blue */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-    .detail-btn:hover {
-        background: #1976D2; /* darker blue */
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .detail-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-.update-btn {
-    background: #FF9800; /* orange */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-    .update-btn:hover {
-        background: #F57C00; /* darker orange */
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .update-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-.delete-btn {
-    background: #E53935; /* red */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-    .delete-btn:hover {
-        background: #C62828; /* darker red */
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .delete-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-.reset-btn {
-    background: #9E9E9E; /* grey */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-    .reset-btn:hover {
-        background: #757575; /* darker grey */
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .reset-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-.new-btn {
-    background: #4CAF50; /* green */
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 6px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px; /* spacing for icon + text */
-}
-
-    .new-btn:hover {
-        background: #388E3C; /* darker green */
-        transform: translateY(-1px);
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .new-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
 /*Room Batch Select Checkbox*/
 /* Room Batch Select Checkbox - updated visuals to match blue header + white rows */
 .bulk-btn {
@@ -795,3 +625,24 @@ body {
                 body.dark-mode .hotel p:first-child {
                     color: #fff; /* title brighter */
                 }
+
+/* Bootstrap */
+
+/* Room Photo SlideShow */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: black; /* Red background */
+    border-radius: 50%; /* Circle shape */
+    padding: 20px;
+    filter: invert(1); /* Make arrows white */
+}
+
+.detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#demo {
+    margin: 40px 0;
+}

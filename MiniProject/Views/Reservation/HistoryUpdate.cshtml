@@ -13,7 +13,7 @@
 <form asp-action="Update" asp-controller="Reservation" method="post">
     <input type="hidden" name="Id" value="@rs.Id" />
 
-    <table class="table detail">
+    <table class="table table-bordered table-hover">
         <tr>
             <th>Id</th>
             <td>@rs.Id</td>
@@ -70,23 +70,23 @@
             <td>
                 @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "Paypal")
                 {
-                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
+                    <button class="btn btn-danger" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
                 }
 
                 @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "E-Wallet")
                 {
-                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
+                    <button class="btn btn-danger" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
                 }
             </td>
         </tr>
     </table>
 
     <section>
-        <button class="back-btn" data-get="Index">Back</button>
-        <button class="update-btn" type="submit">Save</button>
+        <button class="btn btn-secondary" data-get="Index">Back</button>
+        <button class="btn btn-success" type="submit">Save</button>
         @if(rs.CheckIn > currentDay && rs.Payment.Status == "Completed")
         {
-            <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
+            <button class="btn btn-danger" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
         }
     </section>
 </form>

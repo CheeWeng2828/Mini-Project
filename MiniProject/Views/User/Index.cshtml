@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "User | Index";
+    ViewBag.Title = "User Account Management";
 }
 
 <form data-ajax="true"
@@ -9,8 +9,8 @@
     @Html.TextBox("name", "",
     new { type = "search", autofocus = "", data_trim = "", placeholder = "User Name" })
 
-    <button>Search</button>
-    <img src="/images/loader.gif" id="loader" style="display: none">
+    <button class="btn btn-primary">Search</button>
+    <div class="spinner-border" id="loader" style="display: none"></div>
 </form>
 
 <div id="target">

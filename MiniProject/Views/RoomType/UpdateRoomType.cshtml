@@ -33,32 +33,38 @@
     </style>
 }
 
-<form method="post" enctype="multipart/form-data" class="form" id="roomType">
-    <div asp-validation-summary="ModelOnly"></div>
+<div class="container mx-3 my-3 text-bg-light">
+    <form method="post" enctype="multipart/form-data" id="roomType">
+        <div asp-validation-summary="ModelOnly"></div>
 
-    <label asp-for="Id"></label>
-    <b>@Model.Id</b>
+        <div class="mx-3 my-3">
+            <label asp-for="Id"></label>
+            <b>@Model.Id</b>
+        </div>
+        <div class="mx-3 my-3">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control">
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="mx-3 my-3">
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" type="number">
+            <span asp-validation-for="Price"></span>
+        </div>
+        <div class="mx-3 my-3">
+        <label asp-for="Photo"></label>
+        <label class="upload">
+                <input asp-for="Photo" accept="image/jpeg,image/png" multiple class="form-control">
+        </label>
+        <span asp-validation-for="Photo"></span>
+        </div>
 
-    <label asp-for="Name">Name</label>
-    <input asp-for="Name">
-    <span asp-validation-for="Name"></span>
-
-
-    <label asp-for="Price">Price</label>
-    <input asp-for="Price" type="number">
-    <span asp-validation-for="Price"></span>
-
-    <label asp-for="Photo"></label>
-    <label class="upload">
-        <input asp-for="Photo" accept="image/jpeg,image/png" multiple>
-    </label>
-    <span asp-validation-for="Photo"></span>
-
-    <section>
-        <button>Submit</button>
-        <button class="reset-btn" type="reset">Reset</button>
-    </section>
-</form>
+        <section>
+            <button class="btn btn-primary">Submit</button>
+            <button class="btn btn-danger" type="reset">Reset</button>
+        </section>
+    </form>
+</div>
 
 <div class="photos">
     @foreach (var photo in Model.PhotoURL)

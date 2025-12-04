@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Room Manage | Index";
+    ViewBag.Title = "Room Management";
 }
 <form data-ajax="true"
       data-ajax-update="#target"
@@ -9,7 +9,7 @@
     new { type = "search", autofocus = "", data_trim = "", placeholder = "Name"})
 
     <button>Search</button>
-    <img src="/images/loader.gif" id="loader" style="display: none">
+    <div class="spinner-border" id="loader" style="display: none"></div>
 </form>
 
 <div id="target">

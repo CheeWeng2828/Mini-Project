@@ -14,7 +14,7 @@
     Page @Model.PageNumber of @Model.PageCount
 </p>
 
-<table class="table">
+<table class="table table-bordered table-hover">
 
     <tr>
         @foreach (var f in fields)
@@ -44,24 +44,31 @@
             <td>@t.Name</td>
             <td>@t.Price</td>
             <td>
-                <button class="btn btn-warning" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
-                @if (t.Rooms.Any(r => r.RoomTypeId == t.Id))
-                {
-                    <button class="detail-btn" data-get="/Room/Index?typeId=@t.Id">Room List</button>
+                <div class="btn-group">
 
-                }
-                else
-                {
-                    <button class="new-btn" data-get="/Room/BatchAdd?typeId=@t.Id">New Room</button>
+                    <button class="btn btn-warning btn-sm" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
+                    @if (t.Rooms.Any(r => r.RoomTypeId == t.Id))
+                    {
+                        <button class="btn btn-primary btn-sm" data-get="/Room/Index?typeId=@t.Id">Room List</button>
 
-                }
+                    }
+                    else
+                    {
+                        <button class="btn btn-success btn-sm" data-get="/Room/BatchAdd?typeId=@t.Id">New Room</button>
+
+                    }
+                </div>
             </td>
         </tr>
     }
 </table>
 <br>
-<button class="detail-btn" data-get="/Reservation/Status">Room Status</button>
-<button class="new-btn" data-get="/RoomType/NewType">New Room Type</button>
+
+<div class="btn-group">
+    <button class="btn btn-primary btn-sm" data-get="/Reservation/Status">Room Status</button>
+    <button class="btn btn-success btn-sm" data-get="/RoomType/NewType">New Room Type</button>
+</div>
+
 
 
 @{

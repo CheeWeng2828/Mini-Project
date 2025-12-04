@@ -18,7 +18,7 @@
     Page @Model.PageNumber of @Model.PageCount
 </p>
 <div id="target">
-    <table class="table">
+    <table class="table table-bordered table-hover">
         <tr>
             <!-- Add checkbox column header -->
             <th>
@@ -56,16 +56,19 @@
                 <td>@r.RoomTypes.Price</td>
                 <td>@r.Active</td>
                 <td>
-                    <button class="btn btn-info" data-get="/Room/Detail/@r.Id">Detail</button>
-                    <button class="btn btn-warning" data-get="/Room/UpdateRoom/@r.Id">Update</button>
-                    @if (r.Active == true)
-                    {
-                        <button class="btn btn-danger" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-success" data-get="/Room/InactiveRoom/@r.Id">Active</button>
-                    }
+                    <div class="btn-group">
+                        <button class="btn btn-info btn-sm" data-get="/Room/Detail/@r.Id">Detail</button>
+                        <button class="btn btn-warning btn-sm" data-get="/Room/UpdateRoom/@r.Id">Update</button>
+                        @if (r.Active == true)
+                        {
+                            <button class="btn btn-danger btn-sm" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btn-sm" data-get="/Room/InactiveRoom/@r.Id">Active</button>
+                        }
+                    </div>
+                    
                 </td>
             </tr>
         }
@@ -89,9 +92,11 @@
     </div>
 </div>
 
-@* <button class="new-btn" data-post="/Room/AddRoom?typeId=@typeId">New Room</button> *@
-<button class="btn btn-success" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
-<button class="btn btn-light" data-get="/RoomType/Index">Back</button>
+<div class="btn-group">
+    <button class="btn btn-success" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
+    <button class="btn btn-light" data-get="/RoomType/Index">Back</button>
+</div>
+
 
 @{
     var options = PagedListRenderOptions.ClassicPlusFirstAndLast;

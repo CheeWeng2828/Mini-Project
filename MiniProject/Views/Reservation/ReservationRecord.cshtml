@@ -8,13 +8,13 @@
 @Html.Hidden("sort", "", new { form = "f" })
 @Html.Hidden("dir", "", new { form = "f" })
 
-<button class="detail-btn" data-get="Report">Generate Report</button>
+<button class="btn btn-info" data-get="Report">Generate Report</button>
 <p>
     @Model.Count() of @Model.TotalItemCount record(s) |
     Page @Model.PageNumber of @Model.PageCount
 </p>
 
-<table class="table">
+<table class="table table-bordered table-hover">
     <tr>
         @foreach (var f in fields)
         {
@@ -51,16 +51,19 @@
                 <td>@rs.Payment.Status</td>
                 <td>@(rs.Active ? "Active" : "Inactive")</td>
                 <td>
-                <button class="detail-btn" data-get="/Reservation/Detail?Id=@rs.Id">Detail</button>
-                <button class="update-btn" data-get="/Reservation/Update?Id=@rs.Id">Update</button>
+                <div class="btn-group">
+
+                    <button class="btn btn-primary btn-sm" data-get="/Reservation/Detail?Id=@rs.Id">Detail</button>
+                    <button class="btn btn-success btn-sm" data-get="/Reservation/Update?Id=@rs.Id">Update</button>
                 @if(rs.Active)
                 {
-                    <button class="delete-btn" data-get="/Reservation/Active?id=@rs.Id">Inactive</button>
+                        <button class="btn btn-danger btn-sm" data-get="/Reservation/Active?id=@rs.Id">Inactive</button>
                 }
                 else
                 {
-                    <button class="new-btn" data-get="/Reservation/Active?id=@rs.Id">Active</button>
+                    <button class="btn btn-success btn-sm" data-get="/Reservation/Active?id=@rs.Id">Active</button>
                 }
+                </div>
                 </td>
             </tr>
     }

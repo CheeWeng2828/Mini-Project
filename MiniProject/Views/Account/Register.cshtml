@@ -1,39 +1,46 @@
 ﻿@model RegisterVM
 
 @{
-    ViewBag.Title = "Account | Register";
+    ViewBag.Title = "Register";
 }
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
+<div class="container mx-3 my-3 text-bg-light">
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
 
-<form class="form" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-floating mx-3 my-3">
+            <input asp-for="Email" autofocus class="form-control" placeholder="Enter email">
+            <label asp-for="Email"></label>
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="form-floating mx-3 my-3">
+            <input asp-for="Password" class="form-control" placeholder="Enter password">
+            <label asp-for="Password"></label>
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="form-floating mx-3 my-3">
+            <input asp-for="Confirm" class="form-control" placeholder="Confirmation password">
+            <label asp-for="Confirm"></label>
+            <span asp-validation-for="Confirm"></span>
+        </div>
+        <div class="form-floating mx-3 my-3">
+            <input asp-for="Name" class="form-control" placeholder="Enter name">
+            <label asp-for="Name"></label>
+            <span asp-validation-for="Name"></span>
+        </div>
 
-    <label asp-for="Email"></label>
-    <input asp-for="Email" autofocus>
-    <span asp-validation-for="Email"></span>
-
-    <label asp-for="Password"></label>
-    <input asp-for="Password">
-    <span asp-validation-for="Password"></span>
-
-    <label asp-for="Confirm"></label>
-    <input asp-for="Confirm">
-    <span asp-validation-for="Confirm"></span>
-
-    <label asp-for="Name"></label>
-    <input asp-for="Name">
-    <span asp-validation-for="Name"></span>
-
-    <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+        <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
 
 
-    <section>
-        <button>Register</button>
-        <button class="reset-btn" type="reset">Reset</button>
-    </section>
-</form>
+        <section>
+            <button class="btn btn-primary">Register</button>
+            <button class="btn btn-danger" type="reset">Reset</button>
+        </section>
+    </form>
+
+</div>
 
 
 

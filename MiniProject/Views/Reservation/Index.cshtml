@@ -19,10 +19,10 @@
     @Html.TextBox("endDate", "",
         new { type = "date"})
 
-    <button type="submit">Filter</button>
-    <button class="reset-btn" type="reset">Reset</button>
+    <button type="submit" class="btn btn-success">Filter</button>
+    <button class="btn btn-danger" type="reset">Reset</button>
 
-    <img src="/images/loader.gif" id="loader" style="display:none">
+    <div class="spinner-border" id="loader" style="display: none"></div>
 </form>
 
 

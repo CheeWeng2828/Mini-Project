@@ -4,30 +4,37 @@
     ViewBag.Title = "User | Admin Register";
 }
 
-<form class="form" method="post">
-    <div asp-validation-summary="ModelOnly"></div>
+<div class="container mx-3 my-3 text-bg-light">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-floating mb-3 mt-3">
+            <input asp-for="Email" autofocus class="form-control" placeholder="Enter email">
+            <label asp-for="Email"></label>
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input asp-for="Password" class="form-control" placeholder="Enter Password">
+            <label asp-for="Password"></label>
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input asp-for="Confirm" class="form-control" placeholder="Confirm Password">
+            <label asp-for="Confirm"></label>
+            <span asp-validation-for="Confirm"></span>
+        </div>
+        <div class="form-floating mb-3 mt-3">
+            <input asp-for="Name" class="form-control" placeholder="Enter Name">
+            <label asp-for="Name"></label>
+            <span asp-validation-for="Name"></span>
+        </div>
 
-    <label asp-for="Email"></label>
-    <input asp-for="Email" autofocus>
-    <span asp-validation-for="Email"></span>
+        <section>
+            <button class="btn btn-success">Register</button>
+            <button class="btn btn-danger" type="reset">Reset</button>
+        </section>
+    </form>
+</div>
 
-    <label asp-for="Password"></label>
-    <input asp-for="Password">
-    <span asp-validation-for="Password"></span>
-
-    <label asp-for="Confirm"></label>
-    <input asp-for="Confirm">
-    <span asp-validation-for="Confirm"></span>
-
-    <label asp-for="Name"></label>
-    <input asp-for="Name">
-    <span asp-validation-for="Name"></span>
-
-    <section>
-        <button>Register</button>
-        <button type="reset">Reset</button>
-    </section>
-</form>
 
 @section foot {
     <script>

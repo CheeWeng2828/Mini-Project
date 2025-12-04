@@ -61,14 +61,14 @@
 <p>
     @if (User.IsInRole("Admin"))
     {
-        <button class="back-btn" data-get="/Reservation/Index">Back</button>
+        <button class="btn btn-secondary" data-get="/Reservation/Index">Back</button>
     }
     @if (User.IsInRole("Member"))
     {
-        <button class="back-btn" data-get="/Checkout/History">Back</button>
+        <button class="btn btn-secondary" data-get="/Checkout/History">Back</button>
     }
     @if(rs.Payment.Status == "Pending" && User.IsInRole("Member"))
     {
-        <button class="checkout-btn" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
+        <button class="btn btn-secondary" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
     }
 </p>

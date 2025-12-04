@@ -10,7 +10,7 @@
 @Html.Hidden("dir", "", new { form = "f" })
 
 <p>
-    <button data-get="/User/AddAdmin">New Admin</button>
+    <button class="btn btn-success" data-get="/User/AddAdmin">New Admin</button>
 </p>
 
 <p>
@@ -18,7 +18,7 @@
     Page @Model.PageNumber of @Model.PageCount
 </p>
 
-<table class="table">
+<table class="table table-bordered table-hover">
 
     <tr>
         @foreach (var f in fields)
@@ -50,16 +50,19 @@
             <td>@u.Role</td>
             <td>@u.Active</td>
             <td>
-                <button data-get="/User/Detail?id=@u.Id">Detail</button>
+                <div class="btn-group ">
+                    <button class="btn btn-primary btn-sm" data-get="/User/Detail?id=@u.Id">Detail</button>
 
-                @if (u.Active == true)
-                {
-                    <button data-get="/User/ActiveUser?id=@u.Id">Inactive</button>
-                }
-                else
-                {
-                    <button data-get="/User/ActiveUser?id=@u.Id">Active</button>
-                }
+                    @if (u.Active == true)
+                    {
+                        <button class="btn btn-danger btn-sm" data-get="/User/ActiveUser?id=@u.Id">Inactive</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-success btn-sm" data-get="/User/ActiveUser?id=@u.Id">Active</button>
+                    }
+
+                </div>
             </td>
         </tr>
     }
