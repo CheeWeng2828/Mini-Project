@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
- 
+
 
 namespace Assignment.Controllers
 {
@@ -20,8 +20,6 @@ namespace Assignment.Controllers
         {
             var booking = db.Reservations
                             .Include(r => r.Room)
-                                .ThenInclude(rt => rt.Type)
-                                    .ThenInclude(t => t.Hotel)
                             .FirstOrDefault(r => r.Id == bookingId);
 
             if (booking == null) return NotFound();
@@ -29,23 +27,21 @@ namespace Assignment.Controllers
             var vm = new AddReviewVM
             {
                 BookingId = booking.Id,
-                HotelId = booking.Room.Type.Hotel.Id,
-                HotelName = booking.Room.Type.Hotel.Name
             };
 
             return View(vm);
         }
 
-        // POST 
+        // POST : add review
         [HttpPost]
         [Authorize]
         public IActionResult AddReview(AddReviewVM vm)
         {
+            var memberId = int.Parse(User.FindFirst("MemberId").Value);
 
             var review = new Review
             {
-                MemberEmail = User?.Identity?.Name ?? "",
-                HotelId = vm.HotelId,
+                MemberId = memberId,
                 Comment = vm.Comment,
                 Rating = vm.Rating,
                 CleanlinessRating = vm.CleanlinessRating,
@@ -54,9 +50,9 @@ namespace Assignment.Controllers
                 ReservationId = vm.BookingId,
             };
 
-            db.Reviews.Add(review);  
-            db.SaveChanges();      
-            
+            db.Reviews.Add(review);
+            db.SaveChanges();
+
             TempData["Info"] = "Review submitted!";
             return RedirectToAction("ListByBooking", new { bookingId = vm.BookingId });
         }
@@ -65,15 +61,13 @@ namespace Assignment.Controllers
         {
             var reservation = db.Reservations
                 .Include(r => r.Room)
-                    .ThenInclude(rm => rm.Type)
-                        .ThenInclude(t => t.Hotel)
                 .FirstOrDefault(r => r.Id == bookingId);
 
             if (reservation == null)
                 return RedirectToAction("List", "Reservation");
 
             var reviews = db.Reviews
-                .Where(rv => rv.ReservationId == reservation.Id)
+                .Where(rv => rv.ReservationId == bookingId)
                 .ToList();
 
             return View(reviews);
@@ -83,26 +77,26 @@ namespace Assignment.Controllers
         [Authorize]
         public IActionResult UpdateReview(int id)
         {
+            var memberId = int.Parse(User.FindFirst("MemberId").Value);
+
             var review = db.Reviews
-                .Include(r => r.Hotel)
+                .Include(r => r.Member)
                 .FirstOrDefault(r => r.Id == id);
 
 
             if (review == null)
             {
                 TempData["Info"] = "You haven't made the review yet.";
-                return RedirectToAction("ListByBooking"); 
+                return RedirectToAction("ListByBooking");
             }
 
-            //check email
-            if (review.MemberEmail != User.Identity.Name)
+            //check member
+            if (review.MemberId != memberId)
                 return Forbid();
 
             var vm = new UpdateReviewVM
             {
                 Id = review.Id,
-                HotelId = review.HotelId,
-                HotelName = review.Hotel.Name,
                 Comment = review.Comment,
                 ServiceRating = review.ServiceRating,
                 CleanlinessRating = review.CleanlinessRating,
@@ -123,7 +117,7 @@ namespace Assignment.Controllers
             if (review == null)
             {
                 TempData["Info"] = "You haven't made the review yet.";
-                return RedirectToAction("History","Checkout");
+                return RedirectToAction("History", "Checkout");
             }
 
             review.Comment = vm.Comment;
@@ -138,14 +132,15 @@ namespace Assignment.Controllers
             return RedirectToAction("History", "Checkout");
         }
 
+        //show all review
         public IActionResult AllReview()
         {
             var reviews = db.Reviews
+                .Include(r=>r.Member)
                 .Select(r => new ReviewVM
                 {
                     Id = r.Id,
-                    HotelName = r.Hotel.Name,
-                    MemberEmail = r.MemberEmail,
+                    //MemberName = r.Member.Name,
                     Comment = r.Comment,
                     ServiceRating = r.ServiceRating,
                     CleanlinessRating = r.CleanlinessRating,
@@ -157,28 +152,29 @@ namespace Assignment.Controllers
 
             return View(vm);
         }
-        //show all review
-        public IActionResult HotelReview(string hotelId)
-        {
-            var reviews = db.Reviews
-                .Where(rw => rw.HotelId == hotelId)
-                .Select(r => new ReviewVM
-                {
-                    Id = r.Id,
-                    HotelName = r.Hotel.Name,
-                    MemberEmail = r.MemberEmail,
-                    Comment = r.Comment,
-                    ServiceRating = r.ServiceRating,
-                    CleanlinessRating = r.CleanlinessRating,
-                    OverallRating = r.Rating  
-                })
-                .ToList();
+        ////show all review
+        //public IActionResult HotelReview(string hotelId)
+        //{
+        //    var reviews = db.Reviews
+        //        .Where(rw => rw.HotelId == hotelId)
+        //        .Select(r => new ReviewVM
+        //        {
+        //            Id = r.Id,
+        //            HotelName = r.Hotel.Name,
+        //            MemberEmail = r.MemberEmail,
+        //            Comment = r.Comment,
+        //            ServiceRating = r.ServiceRating,
+        //            CleanlinessRating = r.CleanlinessRating,
+        //            OverallRating = r.Rating
+        //        })
+        //        .ToList();
 
-            var vm = new AllReviewVM { Reviews = reviews };
+        //    var vm = new AllReviewVM { Reviews = reviews };
 
-            return View(vm);
-        }
-
+        //    return View(vm);
+        //}
+        
+        //delete review
         public IActionResult DeleteReview(int id)
         {
             var review = db.Reviews
