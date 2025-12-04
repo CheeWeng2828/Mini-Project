@@ -139,8 +139,8 @@ public class DB : DbContext
         public int Id { get; set; }
         [Precision(6, 2)]
         public decimal Amount { get; set; }
-        public string TransactionId { get; set; }
-        public string PaymentMethod { get; set; }
+        public string? TransactionId { get; set; }
+        public string? PaymentMethod { get; set; }
 
         public string Status { get; set; }
         public DateTime? RefundDate { get; set; }

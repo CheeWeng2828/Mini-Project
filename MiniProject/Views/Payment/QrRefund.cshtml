@@ -1,0 +1,88 @@
+﻿@model Payment
+@{
+    ViewBag.Title = "Process Refund...";
+}
+<style>
+    .refund-container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 25px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .refund-detail {
+        margin-bottom: 25px;
+        text-align: left;
+    }
+
+        .refund-detail h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 20px;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 8px;
+        }
+
+        .refund-detail p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #444;
+        }
+
+    section {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+    .back-btn {
+        background: #3498db;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        .back-btn:hover {
+            background: #2980b9;
+        }
+
+</style>
+<div class="refund-container">
+    <div class="refund-detail">
+        <h2>Order Detail:</h2>
+        <p>Reservation Id : @Model.ReservationId</p>
+        <p>Transaction Id : @Model.TransactionId</p>
+        <p>Payment Amount : RM @Model.Amount</p>
+        <p>Payment Method : @Model.PaymentMethod</p>
+    </div>
+    <section>
+        <button class="delete-btn" 
+        data-post="/Payment/QrRefund?paymentId=@Model.Id&reservationId=@Model.ReservationId">
+        Confirm
+        </button>
+        <button class="back-btn" data-get="/Checkout/History">Home</button>
+    </section>
+</div>
