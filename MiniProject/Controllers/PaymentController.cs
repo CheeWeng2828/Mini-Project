@@ -5,7 +5,7 @@ using QRCoder;
 using System.Net.Mail;
 using System.Text.Json;
 
-namespace Assignment.Controllers;
+namespace MiniProject.Controllers;
 
 public class PaymentController : Controller
 {
@@ -43,110 +43,184 @@ public class PaymentController : Controller
         return View();
     }
 
-    public IActionResult QR(string Id,decimal amount)
-    {
-        int reservation_id = int.Parse(Id);
+    // Payment Controller - Clean Production Version
 
-        ViewBag.rsId = reservation_id;
-        ViewBag.Amount = amount;
-        return View();
+    public IActionResult QR(string Id, decimal amount)
+    {
+        try
+        {
+            int reservation_id = int.Parse(Id);
+            ViewBag.rsId = reservation_id;
+            ViewBag.Amount = amount;
+            return View();
+        }
+        catch (Exception ex)
+        {
+            TempData["Info"] = $"Error: {ex.Message}";
+            return RedirectToAction("Index", "Home");
+        }
     }
 
     // Generate QR Code For User Scan To Pay
     [HttpPost]
-    public IActionResult GenerateQRCode(int reservationId,decimal amount)
+    public IActionResult GenerateQRCode([FromBody] QRRequestModel model)
     {
-        // Create Payment Information to Encode in QR
-        var paymentData = new
+        try
         {
-            ReservationId = reservationId,
-            Amount = amount,
-            WalletType = "DuitNow",
-            PaymentId = Guid.NewGuid().ToString(),
-            Timestamp = DateTime.Now,
-            MerchantName = "Hotel Booking System"
-        };
-
-        string qrData = JsonSerializer.Serialize(paymentData);
-
-        using(QRCodeGenerator qrGenerator = new QRCodeGenerator())
-        {
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrData,QRCodeGenerator.ECCLevel.Q);
-            using (var qrCode = new PngByteQRCode(qrCodeData))
+            // Validate reservation exists
+            var reservation = db.Reservations.FirstOrDefault(r => r.Id == model.ReservationId);
+            if (reservation == null)
             {
-                using(MemoryStream ms = new MemoryStream())
+                return Json(new { success = false, message = "Reservation not found" });
+            }
+
+            // Create Payment Information to Encode in QR
+            var paymentData = new
+            {
+                ReservationId = model.ReservationId,
+                Amount = model.Amount,
+                WalletType = "DuitNow",
+                PaymentId = Guid.NewGuid().ToString(),
+                Timestamp = DateTime.Now,
+                MerchantName = "Hotel Booking System"
+            };
+
+            string qrData = JsonSerializer.Serialize(paymentData);
+
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            {
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
+                using (var qrCode = new PngByteQRCode(qrCodeData))
                 {
                     var qrBytes = qrCode.GetGraphic(10);
                     var base64 = Convert.ToBase64String(qrBytes);
 
                     TempData["Info"] = "Pending Payment";
 
-                        return Json(new
-                        {
-                            success = true,
-                            qrCode = $"data:image/png;base64,{base64}",
-                            paymentId = paymentData.PaymentId,
-                        });
+                    return Json(new
+                    {
+                        success = true,
+                        qrCode = $"data:image/png;base64,{base64}",
+                        paymentId = paymentData.PaymentId,
+                    });
                 }
-                
             }
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = $"Error: {ex.Message}" });
         }
     }
 
+    [HttpPost]
     public IActionResult VerifyPayment(string paymentId, int reservationId)
     {
-        var reservation = db.Reservations
-            .Include(r => r.Room)
-                .ThenInclude(rm => rm.RoomTypes)
-            .FirstOrDefault(r => r.Id == reservationId);
-
-        if (reservation == null)
+        try
         {
-            return Json(new { success = false, message = "Reservation Not Found" });
+            // Validate inputs
+            if (string.IsNullOrEmpty(paymentId))
+            {
+                return Json(new { success = false, message = "Payment ID is required" });
+            }
+
+            if (reservationId <= 0)
+            {
+                return Json(new { success = false, message = "Invalid Reservation ID" });
+            }
+
+            var reservation = db.Reservations
+                .Include(p => p.Payment)
+                .Include(r => r.Room)
+                    .ThenInclude(rm => rm.RoomTypes)
+                .FirstOrDefault(r => r.Id == reservationId);
+
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Reservation Not Found" });
+            }
+
+            // Check if payment already exists
+            var existingPayment = db.Payment.FirstOrDefault(p => p.ReservationId == reservationId);
+            if (existingPayment != null)
+            {
+                return Json(new
+                {
+                    success = true,
+                    message = "Payment already processed",
+                    redirectUrl = Url.Action("PaymentSuccess", "Payment", new { Id = reservation.Id })
+                });
+            }
+
+            var days = reservation.CheckOut.DayNumber - reservation.CheckIn.DayNumber;
+            var total = reservation.Price * days;
+
+            var payment = new Payment
+            {
+                ReservationId = reservationId,
+                Amount = total,
+                PaymentMethod = "E-Wallet",
+                TransactionId = paymentId,
+                Status = "Completed"
+            };
+
+            db.Payment.Add(payment);
+            db.SaveChanges();
+
+            var user = db.Users.FirstOrDefault(u => u.Id == reservation.MemberId);
+            if (user != null)
+            {
+                ReceiptEmail(user.Email, reservation);
+            }
+
+            return Json(new
+            {
+                success = true,
+                message = "Payment successful!",
+                redirectUrl = Url.Action("PaymentSuccess", "Payment", new { Id = reservation.Id })
+            });
         }
-
-        var days = reservation.CheckOut.DayNumber - reservation.CheckIn.DayNumber;
-        var total = reservation.Price * days;
-
-        var payment = new Payment
+        catch (Exception ex)
         {
-            ReservationId = reservationId,
-            Amount = total,
-            PaymentMethod = "E-Wallet",
-            Status = "Completed",
-            TransactionId = paymentId,
-        };
-        db.Payment.Add(payment);
-        db.SaveChanges();
-        reservation.Active = true;
-
-        db.SaveChanges();
-
-        ReceiptEmail(User.Identity.Name, reservation);
-
-        return Json(new
-        {
-            success = true,
-            message = "Payment successful!",
-            redirectUrl = Url.Action("PaymentSuccess","Payment", new { Id = reservation.Id })
-        });
+            return Json(new { success = false, message = $"Error: {ex.Message}" });
+        }
     }
 
     public IActionResult PaymentSuccess(int Id)
     {
-        var reservation = db.Reservations
-            .Include(r => r.Payment)
-            .Include(r => r.Room)
-            .ThenInclude(rm => rm.RoomTypes)
-            .FirstOrDefault(r => r.Id == Id);
-
-        if(reservation == null || reservation.Payment.Status == "Pending")
+        try
         {
-            TempData["Info"] = "Payment Not Found Or Incomplete";
+            var reservation = db.Reservations
+                .Include(r => r.Payment)
+                .Include(r => r.Room)
+                .ThenInclude(rm => rm.RoomTypes)
+                .FirstOrDefault(r => r.Id == Id);
+
+            if (reservation == null)
+            {
+                TempData["Info"] = "Payment Not Found";
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (reservation.Payment == null || reservation.Payment.Status == "Pending")
+            {
+                TempData["Info"] = "Payment Incomplete";
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(reservation);
+        }
+        catch (Exception ex)
+        {
+            TempData["Info"] = $"Error: {ex.Message}";
             return RedirectToAction("Index", "Home");
         }
+    }
 
-        return View(reservation);
+    // Helper Model for QR Request
+    public class QRRequestModel
+    {
+        public int ReservationId { get; set; }
+        public decimal Amount { get; set; }
     }
 
     public IActionResult QrRefund(int paymentId)
@@ -157,14 +231,14 @@ public class PaymentController : Controller
         if (payment != null && payment.Status == "Refund")
         {
             TempData["Info"] = "Not Refund Record Exist";
-            return RedirectToAction("History","Checkout");
+            return RedirectToAction("History", "Checkout");
         }
 
         return View(payment);
     }
 
     [HttpPost]
-    public IActionResult QrRefund(int paymentId,int reservationId)
+    public IActionResult QrRefund(int paymentId, int reservationId)
     {
         var payment = db.Payment.Find(paymentId);
         var rs = db.Reservations.Find(reservationId);
@@ -189,9 +263,11 @@ public class PaymentController : Controller
         rs.Active = false;
         db.SaveChanges();
 
-        RefundEmail(User.Identity.Name, reservation);
+        var user = db.Users.First(u => u.Id == reservation.MemberId);
+
+        RefundEmail(user.Email, reservation);
         TempData["Info"] = "Refund Successfully";
-        return RedirectToAction("Refund","Checkout" ,new { paymentId = payment.Id });
+        return RedirectToAction("Refund", "Checkout", new { paymentId = payment.Id });
 
 
     }
