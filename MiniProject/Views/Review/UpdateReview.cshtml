@@ -7,16 +7,16 @@
 //addsound
 <audio id="notifySound" src="~/Sounds/ding-36029.mp3" preload="auto"></audio> *@
 
-@* <form asp-action="UpdateReview" method="post" class="form" id="updateForm">
+<form asp-action="UpdateReview" method="post" class="form" id="updateForm">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <table class="form-table">
         <tr>
-            <td>Hotel</td>
-            <td><b>@Model.HotelName</b></td>
+            @* <td>Hotel</td> *@
+            @* <td><b>@Model.HotelName</b></td>
             <input asp-for="HotelName" type="hidden" />
             <input asp-for="Id" type="hidden" />
-            <input asp-for="HotelId" type="hidden" />
+            <input asp-for="HotelId" type="hidden" /> *@
             <input asp-for="BookingId" type="hidden" />
         </tr>
         <tr>
@@ -69,7 +69,7 @@
         <button type="reset" class="reset-btn">Reset</button>
         <button class="back-btn" data-get="/Review/ListByBooking?bookingId=@Model.BookingId">Back</button>
     </section>
-</form> *@
+</form> 
 
 @* @section foot {
     <script>

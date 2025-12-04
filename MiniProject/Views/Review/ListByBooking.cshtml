@@ -1,4 +1,4 @@
-﻿@* @model List<Assignment.Models.Review>
+﻿@model List<MiniProject.Models.Review>
 @{
     ViewBag.Title = "Reviews";
 }
@@ -7,11 +7,12 @@
 {
     @foreach (var review in Model)
     { 
-        <h4>@review.Hotel.Name</h4>
+        @* <h4>@review.Hotel.Name</h4> *@
         <table class="table table-bordered detail mb-4">
             <tr>
                 <th>Member</th>
-                <td>@review.MemberEmail</td>
+                @* <td>@review.MemberEmail</td> *@
+                <td>@review.Member?.Email</td>
             </tr>
             <tr>
                 <th>Comment</th>
@@ -33,7 +34,8 @@
                 <th>Date of Review</th>
                 <td>@review.CreatedAt.ToString("yyyy-MM-dd")</td>
             </tr>
-            @if (User.Identity.Name == review.MemberEmail)
+            @* @if (User.Identity.Name == review.MemberEmail) *@
+            @if (User.Identity.Name == review.Member?.Email)
             {
                 <tr>
                     <th>More</th>
@@ -54,4 +56,4 @@
 else
 {
     <div class="alert alert-info">No reviews yet.</div>
-} *@
+}
