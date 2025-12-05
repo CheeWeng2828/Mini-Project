@@ -55,7 +55,7 @@
 
                     @if (u.Active == true)
                     {
-                        <button class="btn btn-danger btn-sm" data-get="/User/ActiveUser?id=@u.Id">Inactive</button>
+                        <button class="btn btn-danger btn-sm"  data-bs-toggle="modal" data-bs-target="#myModal">Deactivate</button>
                     }
                     else
                     {
@@ -65,8 +65,35 @@
                 </div>
             </td>
         </tr>
+        <!-- The Modal -->
+        <div class="modal" id="myModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Confirmation Message</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        Are you sure you want to deactivate this user account?
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-get="/User/ActiveUser?id=@u.Id">Confrim</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     }
 </table>
+
+
 
 @{
     var options = PagedListRenderOptions.ClassicPlusFirstAndLast;

@@ -61,7 +61,7 @@
                         <button class="btn btn-warning btn-sm" data-get="/Room/UpdateRoom/@r.Id">Update</button>
                         @if (r.Active == true)
                         {
-                            <button class="btn btn-danger btn-sm" data-get="/Room/InactiveRoom/@r.Id">Inactive</button>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#myModal">Inactive</button>
                         }
                         else
                         {
@@ -71,6 +71,30 @@
                     
                 </td>
             </tr>
+            <div class="modal" id="myModal">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Confirmation Message</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure you want to deactivate this Room?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-get="/Room/InactiveRoom/@r.Id">Confrim</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         }
     </table>
 <br>
@@ -94,7 +118,7 @@
 
 <div class="btn-group">
     <button class="btn btn-success" data-get="/Room/BatchAdd?typeId=@typeId">New Room</button>
-    <button class="btn btn-light" data-get="/RoomType/Index">Back</button>
+    <button class="btn btn-secondary" data-get="/RoomType/Index">Back</button>
 </div>
 
 

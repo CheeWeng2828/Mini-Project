@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<RoomType>
 @{
-    ViewBag.Title = "Room";
+    ViewBag.Title = "HomePage";
     Layout = "_Layout";
 }
 @section head {
@@ -45,49 +45,57 @@
             }
     </style>
 }
-<div style="display: flex; gap: 20px; align-items: flex-start;">
-    <div>
-        <p>Map Location :</p>
-        <iframe src="https://www.google.com/maps?q=KualaLumpur,Malaysia&output=embed"
-                width="350"
-                height="175"
-                style="border:0;"
-                allowfullscreen
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+@if (User.IsInRole("Member"))
+{
+    <div style="display: flex; gap: 20px; align-items: flex-start;">
+        <div>
+            <p>Map Location :</p>
+            <iframe src="https://www.google.com/maps?q=KualaLumpur,Malaysia&output=embed"
+                    width="350"
+                    height="175"
+                    style="border:0;"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
 
-    </div>
+        </div>
 
 
-    @if (ViewBag.Review != null)
-    {
-        var r = ViewBag.Review;
-        <div style="flex: 1; max-width: 400px;">
-            <p>Review : (Click For More)</p>
-            <a href="/Review/HotelReview?hotelId=@r.HotelId" style="text-decoration: none; color: inherit;">
-                <div class="review-box border rounded shadow-sm p-3 h-100">
-                    <small class="text-muted">By @r.MemberEmail</small>
-                    <hr />
-                    <p>@r.Comment</p>
-                    <div class="ratings">
-                        <p><strong>Service:</strong> @r.ServiceRating / 5</p>
-                        <p><strong>Cleanliness:</strong> @r.CleanlinessRating / 5</p>
+        @if (ViewBag.Review != null)
+        {
+            var r = ViewBag.Review;
+            <div style="flex: 1; max-width: 400px;">
+                <p>Review : (Click For More)</p>
+                <a href="/Review/HotelReview?hotelId=@r.HotelId" style="text-decoration: none; color: inherit;">
+                    <div class="review-box border rounded shadow-sm p-3 h-100">
+                        <small class="text-muted">By @r.MemberEmail</small>
+                        <hr />
+                        <p>@r.Comment</p>
+                        <div class="ratings">
+                            <p><strong>Service:</strong> @r.ServiceRating / 5</p>
+                            <p><strong>Cleanliness:</strong> @r.CleanlinessRating / 5</p>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-    }
-</div>
-<div class="products">
-    @foreach (var t in Model)
-    {
-        var photo = t.RoomGalleries.Where(r => r.RoomTypeId == t.Id).Select(r => r.PhotoURL).FirstOrDefault();
+                </a>
+            </div>
+        }
+    </div>
+    <div class="products">
+        @foreach (var t in Model)
+        {
+            var photo = t.RoomGalleries.Where(r => r.RoomTypeId == t.Id).Select(r => r.PhotoURL).FirstOrDefault();
 
-        <div class="product">
+            <div class="product">
 
-            <div>@t.Name - RM @t.Price</div>
-            <img style="cursor:pointer" data-get="Home/Detail?id=@t.Id" src="/room/@photo">
-        </div>
-    }
-</div>
+                <div>@t.Name - RM @t.Price</div>
+                <img style="cursor:pointer" data-get="Home/Detail?id=@t.Id" src="/room/@photo">
+            </div>
+        }
+    </div>
+}
+
+@if (User.IsInRole("Member"))
+{
+    
+}
