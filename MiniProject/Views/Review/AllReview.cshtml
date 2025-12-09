@@ -1,0 +1,31 @@
+﻿@model AllReviewVM
+@{
+    ViewBag.Title = "All Reviews";
+}
+
+@if (Model.Reviews != null && Model.Reviews.Any())
+{
+    <div class="row">
+        @foreach (var r in Model.Reviews)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="review-box border rounded shadow-sm p-3 h-100">
+                    @* <h5>@r.HotelName</h5> *@
+                    <small class="text-muted">By @r.MemberEmail</small>
+                    <hr />
+                    <p>@r.Comment</p>
+
+                    <div class="ratings">
+                        <p><strong>Service:</strong> @r.ServiceRating / 5</p>
+                        <p><strong>Cleanliness:</strong> @r.CleanlinessRating / 5</p>
+                        <p><strong>Overall:</strong> <b>@r.OverallRating / 5</b></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No reviews yet.</p>
+}
