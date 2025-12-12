@@ -275,3 +275,9 @@ public class ReportVM
     public string RoomType { get; set; }
     public decimal TotalSales { get; set; }
 }
+
+public class ReportPageVM
+{
+    public IEnumerable<RoomType> RoomTypes { get; set; }
+    public IEnumerable<ReportVM> SalesByRoomType { get; set; }
+}

@@ -1,49 +1,9 @@
-﻿@model IEnumerable<RoomType>
+﻿@using System.Text.Json
+@model ReportPageVM
+
 @{
     ViewBag.Title = "HomePage";
     Layout = "_Layout";
-}
-@section head {
-    <style>
-        /* Products Grid */
-        .products {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .product {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            width: 250px;
-            height: 250px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-            .product:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            }
-
-            .product > img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            .product > div {
-                position: absolute;
-                background: rgba(0,0,0,0.8);
-                color: #fff;
-                padding: 10px;
-                text-align: center;
-                inset: auto 0 0 0;
-            }
-    </style>
 }
 @if (User.IsInRole("Member"))
 {
@@ -82,7 +42,7 @@
         }
     </div>
     <div class="products">
-        @foreach (var t in Model)
+        @foreach (var t in Model.RoomTypes)
         {
             var photo = t.RoomGalleries.Where(r => r.RoomTypeId == t.Id).Select(r => r.PhotoURL).FirstOrDefault();
 
@@ -95,7 +55,40 @@
     </div>
 }
 
-@if (User.IsInRole("Member"))
+@if (User.IsInRole("Admin"))
 {
-    
+    <canvas id="myChart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Use the correct variables
+        var labels = @Html.Raw(JsonSerializer.Serialize(
+                    Model.SalesByRoomType.Select(s => s.RoomType)
+            ));
+
+    var values = @Html.Raw(JsonSerializer.Serialize(
+                Model.SalesByRoomType.Select(s => s.TotalSales)
+        ));
+
+    // Only run if the canvas exists
+    const ctx = document.getElementById("myChart");
+    if (ctx && labels.length > 0) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Sales',
+                    data: values
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+</script>
 }

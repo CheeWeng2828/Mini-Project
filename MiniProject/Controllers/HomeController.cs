@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MiniProject.Models;
 
 namespace MiniProject.Controllers;
 
@@ -18,8 +19,27 @@ public class HomeController : Controller
     }
     public IActionResult Index()
     {
-        var roomType = db.RoomTypes.Include(t => t.RoomGalleries);
-        return View(roomType);
+        var roomType = db.RoomTypes.Include(t => t.RoomGalleries).ToList();
+
+        var salesByRoomType = db.Reservations
+        .Include(r => r.Room.RoomTypes)
+        .Include(r => r.Payment)
+        .Where(r => r.Payment != null && r.Payment.Status == "Paid")
+        .GroupBy(r => r.Room.RoomTypes.Name)
+        .Select(g => new ReportVM
+        {
+            RoomType = g.Key,
+            TotalSales = g.Sum(r => r.Payment.Amount)
+        })
+        .OrderBy(s => s.RoomType)
+        .ToList();
+
+        var vm = new ReportPageVM
+        {
+            RoomTypes = roomType,
+            SalesByRoomType = salesByRoomType
+        };
+        return View(vm);
     }
 
     public IActionResult Detail(string id)
