@@ -48,9 +48,10 @@ public class AccountController : Controller
         if (u == null)
         {
             ModelState.AddModelError("", "Account Not Found.");
+            return View(vm);
         }
 
-        if (u.Active == false)
+        if (u!= null && u.Active == false)
         {
             ModelState.AddModelError("", "Login credentials not matched or account disabled.");
             return View(vm);

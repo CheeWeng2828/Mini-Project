@@ -1,4 +1,5 @@
-﻿@model Dictionary<Room, List<DateOnly>>
+﻿@model Dictionary<string, List<DateOnly>>
+
 
 @{
     ViewBag.Title = "Reservation | Status";
@@ -63,13 +64,13 @@
     </tr>
 
     @* Generate contents (class = x or o) *@
-    @foreach(var (room,dates) in Model)
+    @foreach (var item in Model)
     {
         <tr>
-            <td>@room.Id (@room.RoomTypes.Id)</td>
-            @for(var d = min; d < max; d = d.AddDays(1))
+            <td>@item.Key</td>
+            @for (var d = min; d < max; d = d.AddDays(1))
             {
-                var cls = dates.Contains(d) ? "x" : "o";
+                var cls = item.Value.Contains(d) ? "x" : "o";
                 <td class="@cls"></td>
             }
         </tr>

@@ -251,29 +251,29 @@ public class ReservationController : Controller
         // dict[R002] = [2022-12-03, 2022-12-04, ...]
 
         var dict = db.Rooms
-                     .OrderBy(rm => rm.Id)
-                     .ToDictionary(rm => rm, rm => new List<DateOnly>());
+                    .OrderBy(r => r.Id)
+                    .ToDictionary(r => r.Id, r => new List<DateOnly>());
 
         // 2. Retrieve reservation records
         // -------------------------------
         // Example: 2024-12-01 (min) ... 2025-01-01 (max)
 
-        var reservation = db.Reservations
-                            .Include(rs => rs.Room)
-                                .ThenInclude(rs => rs.RoomTypes)
-                            .Where(rs =>  min < rs.CheckOut &&
-                                         rs.CheckIn < max && rs.Active == true);
+        var reservations = db.Reservations
+                            .Where(rs =>
+                                        min < rs.CheckOut &&
+                                        rs.CheckIn < max &&
+                                        rs.Active == true);
 
         // 3. Fill the dictionary
         // ----------------------
         // Example: CheckIn = 2024-12-10, CheckOut = 2024-12-15
         // Entries --> 10, 11, 12, 13, 14 *** 15 not included ***
 
-        foreach (var rs in reservation)
+        foreach (var rs in reservations)
         {
             for (var d = rs.CheckIn; d < rs.CheckOut; d = d.AddDays(1))
             {
-                dict[rs.Room].Add(d);
+                dict[rs.RoomId].Add(d);
             }
         }
 
