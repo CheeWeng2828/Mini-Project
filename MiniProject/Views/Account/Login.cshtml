@@ -27,20 +27,22 @@
                 <input class="form-check-input" asp-for="RememberMe">Remember Me
             </label>
         </div>
-        <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+        <div class="d-flex justify-content-center mb-3">
+            <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+        </div>
 
         <br>
 
         <br>
 
-        <section class="mx-3">
+        <section class="d-grid gap-2 mb-3">
             <button class="btn btn-primary">Login</button>
             <button class="btn btn-danger" type="reset">Reset</button>
         </section>
     </form>
 </div>
 
-<p>
+<p class="text-center">
     [ <a href="/Account/Register">Register</a> |
       <a href="/Account/ResetPassword">Reset Password</a> ]
 </p>

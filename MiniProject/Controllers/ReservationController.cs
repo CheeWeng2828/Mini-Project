@@ -259,8 +259,10 @@ public class ReservationController : Controller
         // Example: 2024-12-01 (min) ... 2025-01-01 (max)
 
         var reservation = db.Reservations
-                            .Where(rs => min < rs.CheckOut &&
-                                         rs.CheckIn < max);
+                            .Include(rs => rs.Room)
+                                .ThenInclude(rs => rs.RoomTypes)
+                            .Where(rs =>  min < rs.CheckOut &&
+                                         rs.CheckIn < max && rs.Active == true);
 
         // 3. Fill the dictionary
         // ----------------------
@@ -371,23 +373,7 @@ public class ReservationController : Controller
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Admin")]
-    public IActionResult Report()
-    {
-        var salesByRoomType = db.Reservations
-         .Include(r => r.Room.RoomTypes)
-         .Include(r => r.Payment)
-         .Where(r => r.Payment != null && r.Payment.Status == "Paid")
-         .GroupBy(r => r.Room.RoomTypes.Name)
-         .Select(g => new ReportVM
-         {
-             RoomType = g.Key,
-             TotalSales = g.Sum(r => r.Payment.Amount)
-         })
-         .OrderBy(s => s.RoomType)
-         .ToList();
-        return View(salesByRoomType);
-    }
+
 
     //filration
     /*public IActionResult Filter(string paid)

@@ -1,94 +1,171 @@
 ﻿@using System.Text.Json
 @model ReportPageVM
-
 @{
     ViewBag.Title = "HomePage";
     Layout = "_Layout";
 }
-@if (User.IsInRole("Member"))
-{
-    <div style="display: flex; gap: 20px; align-items: flex-start;">
-        <div>
-            <p>Map Location :</p>
-            <iframe src="https://www.google.com/maps?q=KualaLumpur,Malaysia&output=embed"
-                    width="350"
-                    height="175"
-                    style="border:0;"
-                    allowfullscreen
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
 
+<style>
+</style>
+
+<div class="container my-4">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>Welcome to Moonlight Loft</h1>
+        <p>Your perfect getaway in the heart of Kuala Lumpur</p>
+    </div>
+
+    <!-- Info Cards Section -->
+    <div class="info-cards">
+        <!-- Map Card -->
+        <div class="info-card">
+            <div class="info-card-title">
+                <span>📍</span> Our Location
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps?q=KualaLumpur,Malaysia&output=embed"
+                        style="border:0;"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
 
-
+        <!-- Review Card -->
         @if (ViewBag.Review != null)
         {
             var r = ViewBag.Review;
-            <div style="flex: 1; max-width: 400px;">
-                <p>Review : (Click For More)</p>
-                <a href="/Review/HotelReview?hotelId=@r.HotelId" style="text-decoration: none; color: inherit;">
-                    <div class="review-box border rounded shadow-sm p-3 h-100">
-                        <small class="text-muted">By @r.MemberEmail</small>
-                        <hr />
-                        <p>@r.Comment</p>
-                        <div class="ratings">
-                            <p><strong>Service:</strong> @r.ServiceRating / 5</p>
-                            <p><strong>Cleanliness:</strong> @r.CleanlinessRating / 5</p>
+            <div class="info-card">
+                <div class="info-card-title">
+                    <span>⭐</span> Guest Review
+                </div>
+                <a href="/Review/HotelReview?hotelId=@r.HotelId" class="review-card">
+                    <div class="review-header">
+                        <span class="review-author">@r.MemberEmail</span>
+                        <span class="badge bg-primary">View All</span>
+                    </div>
+                    <p class="review-comment">"@r.Comment"</p>
+                    <div class="review-ratings">
+                        <div class="rating-item">
+                            <span class="rating-label">Service</span>
+                            <span class="rating-value">@r.ServiceRating★</span>
+                        </div>
+                        <div class="rating-item">
+                            <span class="rating-label">Cleanliness</span>
+                            <span class="rating-value">@r.CleanlinessRating★</span>
                         </div>
                     </div>
                 </a>
             </div>
         }
     </div>
+
+    <!-- Available Rooms Section -->
+    <h2 class="section-header">Available Rooms</h2>
     <div class="products">
         @foreach (var t in Model.RoomTypes)
         {
             var photo = t.RoomGalleries.Where(r => r.RoomTypeId == t.Id).Select(r => r.PhotoURL).FirstOrDefault();
-
             <div class="product">
-
-                <div>@t.Name - RM @t.Price</div>
-                <img style="cursor:pointer" data-get="Home/Detail?id=@t.Id" src="/room/@photo">
+                <img data-get="Home/Detail?id=@t.Id" src="/room/@photo" alt="@t.Name">
+                <div class="product-info">
+                    <span class="product-name">@t.Name</span>
+                    <span class="product-price">RM @t.Price</span>
+                </div>
             </div>
         }
     </div>
-}
 
-@if (User.IsInRole("Admin"))
-{
-    <canvas id="myChart"></canvas>
+    <!-- Admin Chart Section -->
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="chart-container">
+            <h3 class="chart-title">Sales Analytics</h3>
+            <canvas id="myChart"></canvas>
+            <canvas id="myPie"></canvas>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+        var labels = @Html.Raw(JsonSerializer.Serialize(Model.SalesByRoomType.Select(s => s.RoomType)));
+        var values = @Html.Raw(JsonSerializer.Serialize(Model.SalesByRoomType.Select(s => s.TotalSales)));
 
-    <script>
-        // Use the correct variables
-        var labels = @Html.Raw(JsonSerializer.Serialize(
-                    Model.SalesByRoomType.Select(s => s.RoomType)
-            ));
-
-    var values = @Html.Raw(JsonSerializer.Serialize(
-                Model.SalesByRoomType.Select(s => s.TotalSales)
-        ));
-
-    // Only run if the canvas exists
-    const ctx = document.getElementById("myChart");
-    if (ctx && labels.length > 0) {
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Sales',
-                    data: values
-                }]
-            },
-            options: {
-                scales: {
-                    y: { beginAtZero: true }
+        if (document.getElementById("myChart") && labels.length > 0) {
+            new Chart("myChart", {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Sales (RM)',
+                        data: values,
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => 'RM ' + value
+                            }
+                        }
+                    }
                 }
+            });
+        }
+
+            // Pie Chart
+            if (document.getElementById("myPie") && labels.length > 0) {
+                // Generate colors dynamically based on number of room types
+                const colors = [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)',
+                    'rgb(201, 203, 207)'
+                ];
+
+                new Chart("myPie", {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total Sales (RM)',
+                            data: values,
+                            backgroundColor: colors.slice(0, labels.length),
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = ((value / total) * 100).toFixed(1);
+                                        return label + ': RM ' + value.toLocaleString() + ' (' + percentage + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
-        });
-    }
-</script>
-}
+    </script>
+        }
+</div>
