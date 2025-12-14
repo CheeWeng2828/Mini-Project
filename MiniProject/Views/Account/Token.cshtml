@@ -7,25 +7,30 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
-<form class="form" method="post">
+<form method="post">
     <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-floating mb-3 mt-3">
+        <input asp-for="Email" disabled class="form-control" placeholder="Enter email">
+        <label asp-for="Email"></label>
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+        <input asp-for="New" class="form-control" placeholder="Enter New Password">
+        <label asp-for="New"></label>
+        <span asp-validation-for="New"></span>
+    </div>
+    <div class="form-floating mb-3 mt-3">
+        <input asp-for="Confirm" class="form-control" placeholder="Confirm New Password">
+        <label asp-for="Confirm"></label>
+        <span asp-validation-for="Confirm"></span>
+    </div>
 
-    <label asp-for="Email"></label>
-    <b>@Model.Email</b>
-    <input type="hidden" asp-for="Email">
-
-    <label asp-for="New"></label>
-    <input asp-for="New">
-    <span asp-validation-for="New"></span>
-
-    <label asp-for="Confirm"></label>
-    <input asp-for="Confirm">
-    <span asp-validation-for="Confirm"></span>
-
-    <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+    <div class="d-flex justify-content-center mb-3">
+        <div class="g-recaptcha" data-sitekey="6Leo6ckrAAAAALKH38m9icnldgj1pc1wa8ulL7hp"></div>
+    </div>
 
     <section>
         <button class="btn btn-warning">Update</button>
-        <button class="reset-btn" type="reset">Reset</button>
+        <button class="btn btn-danger" type="reset">Reset</button>
     </section>
 </form>

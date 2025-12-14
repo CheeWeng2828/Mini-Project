@@ -53,6 +53,7 @@ public class AccountController : Controller
         if (u.Active == false)
         {
             ModelState.AddModelError("", "Login credentials not matched or account disabled.");
+            return View(vm);
         }
 
         // Get the reCaptcha response from our view

@@ -1,50 +1,79 @@
 ﻿@model ReserveVM
 
 @{
-    ViewBag.Title = "Reservation | Reserve";
+    ViewBag.Title = "Reserve";
     // CheckIn within 30 days range
     string min = DateTime.Today.ToString("yyyy-MM-dd");
     string max = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
 }
+<div class="container" style=" border-radius: 15px; overflow: hidden;">
+    <div class="container-fluid bg-dark text-center text-white" style=" border-radius: 15px; overflow: hidden;">
+        <div class="row">
+            <div class="col">
+                <h5>Book your perfect stay at Moonlight Loft</h5>
+                <hr />
+                <p>Reservation Policy :</p>
+                <p>
+                    - CheckIn within 30 days range (@min to @max)<br>
+                </p>
+                <p>
+                    - CheckOut within 10 days range (after CheckIn)
+                </p>
+            </div>
+            </div>
+    </div>
 
-<p>
-    - CheckIn within 30 days range (@min to @max)<br>
-    - CheckOut within 10 days range (after CheckIn)
-</p>
 
-<form class="form" method="post">
-    <div asp-validation-summary="ModelOnly"></div>
-    
-    <label asp-for="TypeName"></label>
-    <b>@Model.TypeName</b>
-    <input type="hidden" asp-for="TypeId" />
-    <span asp-validation-for="CheckIn"></span>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="mb-3 row">
+            <label asp-for="TypeName" class="col-sm-2 col-form-label">Type</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value=@Model.TypeName>
+                <input type="hidden" asp-for="TypeId" />
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label asp-for="CheckIn" class="col-sm-2 col-form-label">Check In</label>
+            <div class="col-sm-10">
+                <input asp-for="CheckIn" class="form-control" min="@min" max="@max">
+                <span asp-validation-for="CheckIn"></span>
+            </div>
+        </div>
 
+        <div class="mb-3 row">
+            <label asp-for="CheckOut" class="col-sm-2 col-form-label">Check Out</label>
+            <div class="col-sm-10">
+                <input asp-for="CheckOut" class="form-control" min="@min" max="@max">
+                <span asp-validation-for="CheckOut"></span>
 
-    <label asp-for="CheckIn"></label>
-    <input asp-for="CheckIn" min="@min" max="@max">
-    <span asp-validation-for="CheckIn"></span>
+            </div>
+        </div>
+        <div class="container bg-success text-center text-white" style=" border-radius: 15px; overflow: hidden;">
+            <h4>
+                <label>Your Will Stay </label>
+                <span id="days"></span> Days
+            </h4>
 
-    <label asp-for="CheckOut"></label>
-    <input asp-for="CheckOut">
-    <span asp-validation-for="CheckOut"></span>
+        </div>
 
-    <label>Days</label>
-    <span id="days"></span>
-    <br>
+        <br>
 
-    <section>
-        @if (User!.Identity!.IsAuthenticated)
-        {
-            <button>Reserve</button>
-        }
-        else
-        {
-            <p>Please <a href="/Account/Login">Login</a> To Reserve.</p>
-        }
-        <button class="reset-btn" type="reset">Reset</button>
-    </section>
-</form>
+        <section>
+            @if (User!.Identity!.IsAuthenticated)
+            {
+                <button class="btn btn-success">Reserve</button>
+                <button class="btn btn-danger" type="reset">Reset</button>
+
+            }
+            else
+            {
+                <p>Please <a href="/Account/Login">Login</a> To Reserve.</p>
+            }
+        </section>
+    </form>
+</div>
+
 
 @section foot {
     <script>
