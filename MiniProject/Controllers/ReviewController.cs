@@ -18,15 +18,17 @@ namespace Assignment.Controllers
         [Authorize]
         public IActionResult AddReview(int bookingId)
         {
-            var booking = db.Reservations
+            var reservation = db.Reservations
                             .Include(r => r.Room)
+                            .Include(r => r.Member)
                             .FirstOrDefault(r => r.Id == bookingId);
 
-            if (booking == null) return NotFound();
+            if (reservation == null) 
+                return NotFound();
 
             var vm = new AddReviewVM
             {
-                BookingId = booking.Id,
+                BookingId = reservation.Id,
             };
 
             return View(vm);
@@ -37,11 +39,21 @@ namespace Assignment.Controllers
         [Authorize]
         public IActionResult AddReview(AddReviewVM vm)
         {
-            var memberId = int.Parse(User.FindFirst("MemberId").Value);
+
+            var email = User.Identity.Name;
+            var member = db.Members.FirstOrDefault(m => m.Email == email);
+
+            var reservation = db.Reservations.FirstOrDefault(r => r.Id == vm.BookingId && r.MemberId == member.Id);
+            if (reservation == null)
+
+            {
+                TempData["Error"] = "Reservation not found or does not belong to you.";
+                return RedirectToAction("Index", "Home");
+            }
 
             var review = new Review
             {
-                MemberId = memberId,
+                MemberId = member.Id,
                 Comment = vm.Comment,
                 Rating = vm.Rating,
                 CleanlinessRating = vm.CleanlinessRating,

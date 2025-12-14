@@ -219,10 +219,9 @@
 
 <form asp-action="AddReview" asp-controller="Review" method="post" id="addreview">
 
-    @* <input type="hidden" asp-for="BookingId" />
-    <input type="hidden" asp-for="HotelId" />
-    <input type="hidden" asp-for="HotelName" /> *@
+   
 
+    <input type="hidden" asp-for="BookingId" />
     <label asp-for="Comment">Reviews:</label><br>
     <textarea asp-for="Comment" rows="4" cols="50" placeholder="Share your experience here .."></textarea><br>
     <span asp-validation-for="Comment" class="text-danger"></span>
