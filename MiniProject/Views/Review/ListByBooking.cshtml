@@ -34,7 +34,17 @@
                 <th>Date of Review</th>
                 <td>@review.CreatedAt.ToString("yyyy-MM-dd")</td>
             </tr>
-            @* @if (User.Identity.Name == review.MemberEmail) *@
+            <tr>
+                 
+                <th>More</th> 
+                <td>
+                    <section>
+                        <button class="update-btn" data-get="/Review/UpdateReview?Id=@review.Id">Update</button>
+                        <button class="delete-btn" data-get="/Review/DeleteReview?Id=@review.Id">Delete</button>
+                    </section>
+                </td>
+            </tr>
+        @*     @if (User.Identity.Name == review.MemberEmail)
             @if (User.Identity.Name == review.Member?.Email)
             {
                 <tr>
@@ -48,7 +58,8 @@
                 </tr>
             }
         </table>
-        <br />
+        <br /> *@
+        </table>
         <button class="back-btn" data-get="/Checkout/History">Back</button>
 
     }

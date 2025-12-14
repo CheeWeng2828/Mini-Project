@@ -87,24 +87,27 @@ namespace Assignment.Controllers
 
         // update review
         [Authorize]
+        
         public IActionResult UpdateReview(int id)
         {
-            var memberId = int.Parse(User.FindFirst("MemberId").Value);
+            //var memberId = int.Parse(User.FindFirst("MemberId").Value);
+            var email = User.Identity.Name;
+            var member = db.Members.FirstOrDefault(m => m.Email == email);
 
             var review = db.Reviews
                 .Include(r => r.Member)
                 .FirstOrDefault(r => r.Id == id);
 
 
-            if (review == null)
-            {
-                TempData["Info"] = "You haven't made the review yet.";
-                return RedirectToAction("ListByBooking");
-            }
+            //if (review == null)
+            //{
+            //    TempData["Info"] = "You haven't made the review yet.";
+            //    return RedirectToAction("ListByBooking");
+            //}
 
-            //check member
-            if (review.MemberId != memberId)
-                return Forbid();
+            ////check member
+            //if (review.MemberId != memberId)
+            //    return Forbid();
 
             var vm = new UpdateReviewVM
             {
@@ -120,10 +123,16 @@ namespace Assignment.Controllers
         }
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateReview(UpdateReviewVM vm)
         {
+
             if (!ModelState.IsValid)
                 return View(vm);
+
+             var email = User.Identity.Name;
+            var member = db.Members.FirstOrDefault(m => m.Email == email);
+
 
             var review = db.Reviews.FirstOrDefault(r => r.Id == vm.Id);
             if (review == null)
