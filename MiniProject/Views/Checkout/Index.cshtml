@@ -1,22 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Checkout";
-    var amountRM = ViewBag.Amount / 0.24;
+    var amountRM = ViewBag.Amount;
 }
 
-<script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientId)&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientId)&currency=MYR"></script>
 
-<div class="checkout-wrapper" style="width:420px;">
+<div class="w3-container w3-light-grey text-center" style="width:100%;margin:auto;">
+    <img src="~/photos/paypal.svg" width="30%" />
     <h2 class="text-center mb-5">Complete your order</h2>
     <div class="checkout-wrapper">
         <label class="form-label">Total Amount (RM)</label>
         <b>@amountRM</b>
         <input class="form-control" type="hidden" id="totalAmount" value="@ViewBag.Amount" />
         <input class="form-control" type="hidden" id="reservationId" value="@ViewBag.rsId" />
-
+    </div>
+    <div class="w3-flex w3-grey" style="justify-content:center;align-items:center;">
+        <div id="notification-container" style="flex-grow:3;"></div>
+        <div id="paypal-button-container" style="flex-grow:10;"></div>
     </div>
 
-    <div id="notification-container" class="mt-3"></div>
-    <div id="paypal-button-container" class="mt-3"></div>
 </div>
 
 <script>
@@ -33,9 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
         fundingSource: paypal.FUNDING.PAYPAL,
         style:{
                     layout:"vertical",
-                    color:"blue",
+                    color:"black",
                     shape:"rect",
-                    label:"paypal"
+                    label:"checkout",
+                    margin:"auto"
         },
         async createOrder() {
             // send amount to server to create order

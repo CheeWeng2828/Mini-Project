@@ -98,75 +98,6 @@ footer {
 
 
 
-    /* Form ----------------------------------------------------------------------- */
-    /* Modern Blue Form */
-    .form {
-    display: grid;
-    grid-template-columns: 150px 1fr; /* label + input */
-    gap: 12px 18px;
-    padding: 25px;
-    background: #f8faff; /* light blue background */
-    border: 1px solid #d0d7f0;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-}
-
-    /* Labels */
-    .form label {
-        font-weight: bold;
-        color: #3240a8;
-        align-self: center;
-    }
-
-    /* Readonly value (like Id) */
-    .form b {
-        align-self: center;
-        font-size: 15px;
-        color: #444;
-    }
-
-    /* Readonly fields (like Id) */
-    .form .readonly {
-        align-self: center;
-        font-size: 15px;
-        color: #444;
-        background: #f0f2f9;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 8px 12px;
-        display: inline-block;
-        width: 100%;
-    }
-
-
-    /* Inputs, selects, textareas */
-    .form input[type="text"],
-    .form input[type="number"],
-    .form input[type="file"],
-    .form select {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 14px;
-        transition: border 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        .form input:focus,
-        .form select:focus {
-            border-color: #1976d2;
-            box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
-            outline: none;
-        }
-
-    /* File upload styling */
-    .form .upload input[type="file"] {
-        border: none;
-        padding: 0;
-    }
-
 /* Validation messages - Fixed to show red */
 .field-validation-error,
 span[data-valmsg-for],
@@ -200,48 +131,6 @@ span[data-valmsg-for],
 .validation-summary-valid {
     display: none;
 }
-    /* Buttons section */
-    .form section {
-        grid-column: 1 / -1;
-        display: flex;
-        gap: 12px;
-        margin-top: 15px;
-    }
-
-    .form button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
-
-        /* Submit button */
-        .form button[type="submit"],
-        .form button:not([type]) {
-            background: #1976d2;
-            color: #fff;
-        }
-
-            .form button[type="submit"]:hover,
-            .form button:not([type]):hover {
-                background: #1259a7;
-                transform: scale(1.05);
-            }
-
-        /* Reset button */
-        .form button[type="reset"] {
-            background: #ccc;
-            color: #333;
-        }
-
-            .form button[type="reset"]:hover {
-                background: #999;
-                transform: scale(1.05);
-            }
-
 /* Photo Upload --------------------------------------------------------------- */
 
 .upload img {
@@ -265,59 +154,6 @@ span[data-valmsg-for],
     text-align: center;
 }
 
-/* Photo Slide */
-.slider {
-    position: relative;
-    width: 220px; /* wrapper size slightly larger */
-    height: 220px;
-    margin: 20px auto;
-    overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    background: #f8faff; /* soft blue background */
-}
-
-    .slider img {
-        width: 200px;
-        height: 200px;
-        display: none;
-        margin: 10px auto; /* centers image inside slider */
-        border-radius: 8px;
-    }
-
-img.displaySlide {
-    display: block;
-    animation: fade 1s ease-in-out;
-}
-
-/* Navigation buttons */
-.slider button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2rem;
-    padding: 6px 10px;
-    background-color: rgba(25, 118, 210, 0.9); /* blue */
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-    .slider button:hover {
-        background-color: rgba(18, 89, 167, 0.95);
-        transform: translateY(-50%) scale(1.1);
-    }
-
-.prev {
-    left: 8px;
-}
-
-.next {
-    right: 8px;
-}
-
 /* Fade effect */
 @keyframes fade {
     from {
@@ -328,40 +164,6 @@ img.displaySlide {
         opacity: 1;
     }
 }
-
-
-
-/* Search Form */
-#f {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-    #f input[type="search"] {
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 16px;
-        width: 250px;
-        margin-right: 10px;
-    }
-
-    #f button {
-        padding: 10px 20px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-        #f button:hover {
-            background: #0056b3;
-        }
 
 /* All review */
 .review-box {
@@ -377,68 +179,100 @@ img.displaySlide {
         box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
     }
 
-/*Room Batch Select Checkbox*/
-/* Room Batch Select Checkbox - updated visuals to match blue header + white rows */
+/* ================================
+   Bulk Actions / Batch Select UI
+   ================================ */
+
+/* Action buttons */
 .bulk-btn {
     margin-right: 10px;
     padding: 8px 15px;
-    border: 1px solid #007bff;
-    background-color: #007bff;
+    border: 1px solid #0d6efd;
+    background-color: #0d6efd;
     color: #ffffff;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.12s ease, transform 0.06s ease;
+    transition: background-color 0.15s ease, transform 0.08s ease;
 }
 
     .bulk-btn:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
+        background-color: #0b5ed7;
+        border-color: #0b5ed7;
         transform: translateY(-1px);
     }
 
+/* Selected count text */
 #selected-count {
     font-style: italic;
-    color: #0056b3; /* blue accent so it stands out on a light/white panel */
+    color: #0d6efd;
     font-weight: 700;
     margin-left: 6px;
 }
 
+/* Bulk action container */
 #bulk-actions {
-    padding: 15px;
-    background-color: rgba(0, 123, 255, 0.04); /* very light blue to tie to header */
-    border: 1px solid rgba(0, 123, 255, 0.12);
+    padding: 14px;
+    background-color: #f8fbff;
+    border: 1px solid #e1ecff;
     border-radius: 8px;
     margin-bottom: 15px;
-    display: flex; /* keeps items aligned nicely */
+    display: flex;
     align-items: center;
-    gap: 10px; /* spacing between controls */
+    gap: 12px;
 }
 
+/* Select dropdown */
 #newTypeSelect {
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-size: 14px;
-    padding: 6px 8px; /* added padding so it visually matches buttons */
-    background-color: #ffffff; /* keeps table-data look consistent */
+    padding: 6px 10px;
+    background-color: #ffffff;
     color: #212529;
     min-width: 160px;
 }
 
-#selectAll {
-    margin-right: 5px;
-    vertical-align: middle;
-    accent-color: #007bff; /* colors native checkboxes in modern browsers */
+/* Checkboxes */
+#selectAll,
+.row-checkbox {
+    accent-color: #0d6efd;
+    cursor: pointer;
 }
 
+/* Checkbox sizing */
 .row-checkbox {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
+
+/* ================================
+   Table Selection Styling
+   ================================ */
+
+/* Hover row */
+.table tbody tr:hover {
+    background-color: #f8fbff;
+}
+
+/* Selected row */
+.table tbody tr.selected,
+.table tbody tr:has(.row-checkbox:checked) {
+    background-color: #f2f7ff;
+}
+
+    /* Selected + hover */
+    .table tbody tr.selected:hover,
+    .table tbody tr:has(.row-checkbox:checked):hover {
+        background-color: #e9f1ff;
+    }
+
+    /* Left indicator for selected row */
+    .table tbody tr.selected td:first-child,
+    .table tbody tr:has(.row-checkbox:checked) td:first-child {
+        border-left: 4px solid #0d6efd;
+    }
+
 
 /* Default light mode */
 body {
