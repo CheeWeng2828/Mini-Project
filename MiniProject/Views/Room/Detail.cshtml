@@ -1,7 +1,7 @@
 ﻿@model Room
 
 @{
-    ViewBag.Title = "Room | Index";
+    ViewBag.Title = "Detail";
     var r = Model;
     var photo = r.RoomTypes.RoomGalleries.Where(g => g.RoomTypeId == r.RoomTypeId).Select(g => g.PhotoURL).ToList();
 
