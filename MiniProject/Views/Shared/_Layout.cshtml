@@ -40,6 +40,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Checkout/History">My Bookings</a>
                         </li>
+
                     }
                     @if (User.IsInRole("Admin"))
 
@@ -62,6 +63,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
                             <li><a class="dropdown-item" href="/Account/UpdatePassword">Update Password</a></li>
+                            <li><a class="dropdown-item" href="/Account/UpdateProfile">Update Profile</a></li>
                         </ul>
                     </li>
                 }
@@ -73,6 +75,7 @@
                             <li><a class="dropdown-item" href="/Account/Login">Login</a></li>
                             <li><a class="dropdown-item" href="/Account/Register">Register</a></li>
                             <li><a class="dropdown-item" href="/Account/ResetPassword">Reset Password</a></li>
+                         
                         </ul>
                     </li>
                 }

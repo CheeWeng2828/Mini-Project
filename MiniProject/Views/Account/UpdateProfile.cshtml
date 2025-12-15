@@ -7,7 +7,7 @@
     <div asp-validation-summary="ModelOnly"></div>
 
     <label asp-for="Email"></label>
-    <b>@Model.Email</b>
+    <b>@Model.Email</b><br>
 
     <label asp-for="Name"></label>
     <input asp-for="Name" autofocus>
@@ -20,12 +20,15 @@
         <input type="hidden" asp-for="PhotoURL" />
         <img src="/photos/@Model.PhotoURL">
     </label>
+     
     <span asp-validation-for="Photo"></span>
-
+    <button class="reset-btn" type="reset">Reset</button><br><br>
     <section>
+        
         <button class="btn btn-warning">Confirm</button>
-        <button class="reset-btn" type="reset">Reset</button>
-        <button data-get="/Camera/Index?controllerName=Account&view=UpdateProfile">Take Photo</button>
+        
         <button class="btn btn-primary" data-get="/Account/UpdatePassword">Update Password</button>
+        @* <button data-get="/Camera/Index?controllerName=Account&view=UpdateProfile">Take Photo</button> *@
+        
     </section>
 </form>
