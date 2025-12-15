@@ -105,12 +105,11 @@
 </style>
 
 <form asp-action="UpdateReview" asp-controller="Review" method="post" id="updateReviewForm">
+    <div asp-validation-summary="All" class="text-danger"></div>
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="BookingId" />
-    <input type="hidden" asp-for="CleanlinessRating" id="CleanlinessRating" />
-    <input type="hidden" asp-for="ServiceRating" id="ServiceRating" />
-    <input type="hidden" asp-for="Rating" id="Rating" />
+    
 
 
     <label asp-for="Comment">Reviews:</label>
@@ -123,7 +122,7 @@
         var selected = Model.CleanlinessRating >= i ? "selected" : "";
         <button type="button" class="rating-btn clean-btn @selected" onclick="setRating(@i, 'CleanlinessRating', 'clean-btn')">@i</button>
     }
-    <input type="hidden" asp-for="CleanlinessRating" id="CleanlinessRating" />
+    <input type="hidden" asp-for="CleanlinessRating" value="@Model.CleanlinessRating" />
     <span asp-validation-for="CleanlinessRating" class="text-danger"></span>
 
     <label>Service</label>
@@ -132,7 +131,7 @@
         var selected = Model.ServiceRating >= i ? "selected" : "";
         <button type="button" class="rating-btn service-btn @selected" onclick="setRating(@i, 'ServiceRating', 'service-btn')">@i</button>
     }
-    <input type="hidden" asp-for="ServiceRating" id="ServiceRating" />
+    <input type="hidden" asp-for="ServiceRating" value="@Model.ServiceRating" />
     <span asp-validation-for="ServiceRating" class="text-danger"></span>
 
     <label>Overall Rating</label>
@@ -141,7 +140,7 @@
         var selected = Model.Rating >= i ? "selected" : "";
         <button type="button" class="rating-btn overall-btn @selected" onclick="setRating(@i, 'Rating', 'overall-btn')">@i</button>
     }
-    <input type="hidden" asp-for="Rating" id="Rating" />
+    <input type="hidden" asp-for="Rating" value="@Model.Rating" />
     <span asp-validation-for="Rating" class="text-danger"></span>
 
     <button type="submit">Update Review</button>

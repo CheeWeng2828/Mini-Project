@@ -94,10 +94,22 @@ namespace Assignment.Controllers
             var email = User.Identity.Name;
             var member = db.Members.FirstOrDefault(m => m.Email == email);
 
+            if (member == null)
+                return Unauthorized();
+
             var review = db.Reviews
-                .Include(r => r.Member)
                 .FirstOrDefault(r => r.Id == id);
 
+            if (review == null)
+            {
+                TempData["Info"] = "Review not found.";
+                return RedirectToAction("History", "Checkout");
+            }
+            //var review = db.Reviews
+            //    .Include(r => r.Member)
+            //    .FirstOrDefault(r => r.Id == id);
+
+            //var review = db.Reviews.FirstOrDefault(r => r.Id == id);
 
             //if (review == null)
             //{
@@ -105,18 +117,18 @@ namespace Assignment.Controllers
             //    return RedirectToAction("ListByBooking");
             //}
 
-            ////check member
-            //if (review.MemberId != memberId)
-            //    return Forbid();
+            //check member
+            if (review.MemberId != member.Id)
+                return Forbid();
 
             var vm = new UpdateReviewVM
             {
                 Id = review.Id,
+                BookingId = review.ReservationId ?? 0,
                 Comment = review.Comment,
                 ServiceRating = review.ServiceRating,
                 CleanlinessRating = review.CleanlinessRating,
-                Rating = review.Rating,
-                BookingId = review.ReservationId ?? 0,
+                Rating = review.Rating
             };
 
             return View(vm);
@@ -130,16 +142,22 @@ namespace Assignment.Controllers
             if (!ModelState.IsValid)
                 return View(vm);
 
-             var email = User.Identity.Name;
+            var email = User.Identity.Name;
             var member = db.Members.FirstOrDefault(m => m.Email == email);
 
+            if (member == null)
+                return Unauthorized();
 
             var review = db.Reviews.FirstOrDefault(r => r.Id == vm.Id);
+            
             if (review == null)
             {
                 TempData["Info"] = "You haven't made the review yet.";
                 return RedirectToAction("History", "Checkout");
             }
+
+            if (review.MemberId != member.Id)
+                return Forbid();
 
             review.Comment = vm.Comment;
             review.ServiceRating = vm.ServiceRating;

@@ -239,8 +239,8 @@ public class UpdateReviewVM
 {
     [Required]
     public int Id { get; set; }
-    public string HotelId { get; set; }
-    public string HotelName { get; set; }
+    //public string HotelId { get; set; }
+    //public string HotelName { get; set; }
     public int BookingId { get; set; }
 
     [Required]
