@@ -33,11 +33,9 @@ namespace Assignment.Controllers
             var rs = db.Reservations.Where(r => r.Id == reservation_id).First();
             var days = rs.CheckOut.DayNumber - rs.CheckIn.DayNumber;
             var total = rs.Price * days;
-            var exchangeRate = 0.24;
-            var totalUsd = (double)total * exchangeRate;
 
             ViewBag.rsId = reservation_id;
-            ViewBag.Amount = totalUsd;
+            ViewBag.Amount = total;
             ViewBag.PaypalClientId = PaypalClientId;
             return View();
         }
@@ -66,7 +64,7 @@ namespace Assignment.Controllers
             createOrderRequest.Add("application_context", applicationContext);
 
             JsonObject amount = new JsonObject();
-            amount.Add("currency_code", "USD");
+            amount.Add("currency_code", "MYR");
             amount.Add("value", totalAmount);
 
             JsonArray purchaseUnits = new JsonArray();
