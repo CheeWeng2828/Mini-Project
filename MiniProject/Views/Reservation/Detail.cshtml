@@ -8,8 +8,7 @@
     var days = rs.CheckOut.DayNumber - rs.CheckIn.DayNumber;
     var total = rs.Price * days;
 }
-<h2>Reservation Detail</h2>
-<table class="table detail">
+<table class="w3-table-all w3-card-4">
     <tr>
         <th>Reservation Id</th>
         <td>@rs.Id</td>
@@ -57,7 +56,7 @@
     </tr>
 </table>
 
-
+<br />
 <p>
     @if (User.IsInRole("Admin"))
     {

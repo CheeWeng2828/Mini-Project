@@ -47,8 +47,8 @@ public class AccountController : Controller
         // (2) Custom validation -> verify password
         if (u == null)
         {
-            ModelState.AddModelError("", "Account Not Found.");
-            return View(vm);
+            TempData["Info"] = "Account Not Found, Please Register Now.";
+            return RedirectToAction("Register","Account");
         }
 
         if (u!= null && u.Active == false)

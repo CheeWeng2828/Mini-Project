@@ -112,6 +112,7 @@ public class PaymentController : Controller
         }
     }
 
+    // CHANGE 1: In VerifyPayment method - Fix the payment already exists check
     [HttpPost]
     public IActionResult VerifyPayment(string paymentId, int reservationId)
     {
@@ -139,9 +140,8 @@ public class PaymentController : Controller
                 return Json(new { success = false, message = "Reservation Not Found" });
             }
 
-            // Check if payment already exists
-            var existingPayment = db.Payment.FirstOrDefault(p => p.ReservationId == reservationId);
-            if (existingPayment != null)
+            // FIX: Check if payment already exists AND is completed
+            if (reservation.Payment != null && reservation.Payment.Status == "Completed")
             {
                 return Json(new
                 {
@@ -185,6 +185,7 @@ public class PaymentController : Controller
         }
     }
 
+    // CHANGE 2: Fix PaymentSuccess method
     public IActionResult PaymentSuccess(int Id)
     {
         try
@@ -197,11 +198,18 @@ public class PaymentController : Controller
 
             if (reservation == null)
             {
+                TempData["Info"] = "Reservation Not Found";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // FIX: Check if payment exists and is completed
+            if (reservation.Payment == null)
+            {
                 TempData["Info"] = "Payment Not Found";
                 return RedirectToAction("Index", "Home");
             }
 
-            if (reservation.Payment == null || reservation.Payment.Status == "Pending")
+            if (reservation.Payment.Status != "Completed")
             {
                 TempData["Info"] = "Payment Incomplete";
                 return RedirectToAction("Index", "Home");
@@ -215,6 +223,7 @@ public class PaymentController : Controller
             return RedirectToAction("Index", "Home");
         }
     }
+
 
     // Helper Model for QR Request
     public class QRRequestModel
@@ -272,9 +281,13 @@ public class PaymentController : Controller
 
     }
 
+    // CHANGE 3: Fix ReceiptEmail method - Use FirstOrDefault with Email instead of Find
     private void ReceiptEmail(string email, Reservation reservation)
     {
-        User u = db.Users.Find(email)!;
+        // FIX: Use FirstOrDefault with email instead of Find
+        User u = db.Users.FirstOrDefault(user => user.Email == email);
+
+        if (u == null) return; // Exit if user not found
 
         var roomName = reservation.Room.RoomTypes.Name;
         var totalAmount = reservation.Payment.Amount;
@@ -282,8 +295,6 @@ public class PaymentController : Controller
         var checkIn = reservation.CheckIn;
         var checkOut = reservation.CheckOut;
         var paymentMethod = reservation.Payment.PaymentMethod;
-
-
 
         var mail = new MailMessage();
         mail.To.Add(new MailAddress(u.Email, u.Name));
@@ -337,14 +348,18 @@ public class PaymentController : Controller
     </td>
   </tr>
 </table>
-"; ;
+";
 
         hp.SendEmail(mail);
     }
 
+    // CHANGE 4: Fix RefundEmail method - Use FirstOrDefault with Email instead of Find
     private void RefundEmail(string email, Reservation reservation)
     {
-        User u = db.Users.Find(email)!;
+        // FIX: Use FirstOrDefault with email instead of Find
+        User u = db.Users.FirstOrDefault(user => user.Email == email);
+
+        if (u == null) return; // Exit if user not found
 
         var roomName = reservation.Room.RoomTypes.Name;
         var totalAmount = reservation.Payment.Amount;
@@ -355,7 +370,6 @@ public class PaymentController : Controller
         var refundStatus = reservation.Payment.Status;
         var refundTime = reservation.Payment.RefundDate;
         var refundId = reservation.Payment.RefundId;
-
 
         var mail = new MailMessage();
         mail.To.Add(new MailAddress(u.Email, u.Name));
@@ -382,7 +396,7 @@ public class PaymentController : Controller
         <!-- Header -->
         <tr>
           <td align='center' style='border-bottom:2px solid #eee; padding-bottom:15px;'>
-            <h2 style='margin:0; font-size:20px; color:'red';'>Refund</h2>
+            <h2 style='margin:0; font-size:20px; color:red;'>Refund</h2>
           </td>
         </tr>
 
@@ -411,7 +425,7 @@ public class PaymentController : Controller
     </td>
   </tr>
 </table>
-"; ;
+";
 
         hp.SendEmail(mail);
     }

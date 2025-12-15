@@ -7,7 +7,7 @@
 <br>
 <strong>- A refund can only be made if the cancellation is at least 3 days before the check-in date.</strong><br>
 <strong>- Guests are allowed to submit a review only after their check-out date has passed.</strong><br>
-<table class="table">
+<table class="table table-bordered table-hover">
 
     <tr>
         <th>Id</th>
@@ -54,28 +54,28 @@
 
                 @if (rs.Review == null && rs.Payment.Status == "Completed" && rs.CheckOut < currentDay)
                 {
-                    <button class="update-btn" data-get="/Review/AddReview?bookingId=@rs.Id">Leave a Review</button>
+                    <button class="btn btn-warning" data-get="/Review/AddReview?bookingId=@rs.Id">Leave a Review</button>
                 }
 
                 @if (rs.Payment.Status == "Completed" && refundpolicy > 3 && rs.Payment.PaymentMethod == "Paypal")
                 {
-                    <button class="delete-btn" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
+                    <button class="btn btn-danger" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
                 }
 
                 @if (rs.Payment.Status == "Completed" && refundpolicy > 3 && rs.Payment.PaymentMethod == "E-Wallet")
                 {
-                    <button class="delete-btn" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
+                    <button class="btn btn-danger" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
                 }
 
                 @if (rs.Payment.Status == "Pending")
                 {
-                    <button class="checkout-btn" data-get="/Payment/Index?id=@rs.Id">Checkout</button>
+                    <button class="btn btn-success" data-get="/Payment/Index?id=@rs.Id">Checkout</button>
                 }
 
 
                 @if (rs.Payment.Status == "Refund")
                 {
-                    <button class="delete-btn" data-get="/Checkout/Refund?paymentId=@rs.Payment.Id">Refund Detail</button>
+                    <button class="btn btn-danger" data-get="/Checkout/Refund?paymentId=@rs.Payment.Id">Refund Detail</button>
                 }
 
             </td>

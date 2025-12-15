@@ -556,8 +556,14 @@ body {
 }
 
 #demo {
-    margin: 40px 0;
+    max-width: 800px;
+    margin: 0 auto;
 }
+
+    #demo .carousel-inner img {
+        max-height: 400px;
+        object-fit: cover;
+    }
 
 .hero-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
