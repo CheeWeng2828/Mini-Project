@@ -222,8 +222,7 @@ public class ListByBookingVM
 public class ReviewVM
 {
     public int Id { get; set; }
-    public string HotelName { get; set; }
-    public string MemberEmail { get; set; }
+    public string MemberName { get; set; }
     public string Comment { get; set; }
     public int ServiceRating { get; set; }
     public int CleanlinessRating { get; set; }

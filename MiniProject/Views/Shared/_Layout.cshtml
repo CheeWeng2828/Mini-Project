@@ -16,6 +16,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- W3 CSS -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <!-- Google Icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     @RenderSection("head", false)
 </head>
@@ -40,6 +42,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Checkout/History">My Bookings</a>
                         </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Account/Profile">
+                            <i class="material-icons">person</i>
+                        </a>
+                        </li>
 
                     }
                     @if (User.IsInRole("Admin"))
@@ -55,26 +62,25 @@
                     </li>
 
                     }
-
-                @if (User.Identity!.IsAuthenticated)
+                <li class="nav-item d-flex align-items-center">
+                    <div class="form-check form-switch d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" id="themeToggle" name="darkmode" value="yes">
+                        <label class="form-check-label text-light" for="mySwitch">Dark Mode</label>
+                    </div>
+                </li>
+                @if (User.IsInRole("Admin"))
                 {
-<<<<<<< Updated upstream
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Account</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
+                            <li>
+                                <a href="/Account/Logout" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                            </li>
                             <li><a class="dropdown-item" href="/Account/UpdatePassword">Update Password</a></li>
-                            <li><a class="dropdown-item" href="/Account/UpdateProfile">Update Profile</a></li>
                         </ul>
-=======
-
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Account/Profile">Profile</a>
->>>>>>> Stashed changes
                     </li>
                 }
-                else
+                @if(!User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Account</a>
@@ -82,24 +88,38 @@
                             <li><a class="dropdown-item" href="/Account/Login">Login</a></li>
                             <li><a class="dropdown-item" href="/Account/Register">Register</a></li>
                             <li><a class="dropdown-item" href="/Account/ResetPassword">Reset Password</a></li>
-                         
+
                         </ul>
                     </li>
                 }
-                <li class="nav-item d-flex align-items-center">
-                    <div class="form-check form-switch d-flex align-items-center">
-                        <input class="form-check-input" type="checkbox" id="themeToggle" name="darkmode" value="yes">
-                        <label class="form-check-label text-light" for="mySwitch">Dark Mode</label>
-                    </div>
-                </li>
             </ul>
-            @* <a href="/Account/Profile">
-                <img style="width:40px;"
-                     class="rounded-pill" src="/photos/logo.jpg" data-bs-toggle="tooltip"
-                     data-bs-placement="bottom" title="HomePage">
-            </a> *@
         </div>
     </nav>
+
+    <div class="modal" id="logoutModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Logout ?</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Do you want to log out?
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-get="/Account/Logout">Logout</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <main class="container">
         <h1>@ViewBag.Title</h1>
         @RenderBody()
@@ -107,7 +127,7 @@
 
     <footer class="mt-5 p-2 bg-dark text-white text-center">
         <p>
-            Developed by <b>DFT2S1G8</b>
+            Developed by <b>DFT2S2G8</b>
             Copyrighted &copy; @DateTime.Today.Year
         </p>
     </footer>

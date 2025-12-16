@@ -116,7 +116,7 @@ namespace MiniProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult ActiveUser(int id)
         {
-            var u = db.Users.FirstOrDefault(u => u.Id == id);
+            var u = db.Users.FirstOrDefault(u => u.Id == id && u.Email != User!.Identity!.Name);
 
             if (u != null)
             {
@@ -124,8 +124,11 @@ namespace MiniProject.Controllers
                 db.SaveChanges();
                 TempData["Info"] = u.Active ? "User Active." : "User Inactive.";
             }
-
-            return Redirect(Request.Headers.Referer.ToString());
+            else
+            {
+                TempData["Info"] = "Cannot Deactivate Self-Account";
+            }
+                return Redirect(Request.Headers.Referer.ToString());
         }
     }
 }

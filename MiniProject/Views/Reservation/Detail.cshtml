@@ -68,6 +68,6 @@
     }
     @if(rs.Payment.Status == "Pending" && User.IsInRole("Member"))
     {
-        <button class="btn btn-secondary" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
+        <button class="btn btn-success" data-get="/Payment/Index?Id=@rs.Id">Checkout</button>
     }
 </p>

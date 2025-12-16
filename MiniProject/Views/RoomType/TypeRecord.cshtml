@@ -46,15 +46,15 @@
             <td>
                 <div class="btn-group">
 
-                    <button class="btn btn-warning btn-sm" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
+                    <button class="btn btn-warning" data-get="/RoomType/UpdateRoomType/@t.Id">Update</button>
                     @if (t.Rooms.Any(r => r.RoomTypeId == t.Id))
                     {
-                        <button class="btn btn-primary btn-sm" data-get="/Room/Index?typeId=@t.Id">Room List</button>
+                        <button class="btn btn-primary" data-get="/Room/Index?typeId=@t.Id">Room List</button>
 
                     }
                     else
                     {
-                        <button class="btn btn-success btn-sm" data-get="/Room/BatchAdd?typeId=@t.Id">New Room</button>
+                        <button class="btn btn-success" data-get="/Room/BatchAdd?typeId=@t.Id">New Room</button>
 
                     }
                 </div>
@@ -65,8 +65,8 @@
 <br>
 
 <div class="btn-group">
-    <button class="btn btn-primary btn-sm" data-get="/Reservation/Status">Room Status</button>
-    <button class="btn btn-success btn-sm" data-get="/RoomType/NewType">New Room Type</button>
+    <button class="btn btn-primary" data-get="/Reservation/Status">Room Status</button>
+    <button class="btn btn-success" data-get="/RoomType/NewType">New Room Type</button>
 </div>
 
 

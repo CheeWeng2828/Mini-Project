@@ -4,59 +4,50 @@
     ViewBag.Title = "Profile";
 }
 
-<<<<<<< Updated upstream
-    <label asp-for="Email"></label>
-    <b>@Model.Email</b><br>
-=======
 <div class="container-fluid">
-    <form method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly"></div>
-        <div class="w3-card-4 w3-center" style="width:100%;max-width:400px;">
-            <br />
-            <label class="upload">
-                <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
-                <input type="hidden" asp-for="PhotoURL" />
-                <img class="w3-circle" src="/photos/@Model.PhotoURL">
-            </label>
-            <br>
-            <label asp-for="Photo">Click Photo to Edit</label>
->>>>>>> Stashed changes
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
 
-            <span asp-validation-for="Photo"></span>
+                <div class="row">
+                    <!-- Photo Column -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="w3-card-4 w3-center p-3">
+                            <label class="upload" style="cursor: pointer;">
+                                <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
+                                <input type="hidden" asp-for="PhotoURL" />
+                                <img class="w3-circle" src="/photos/@Model.PhotoURL" alt="Profile Photo" style="max-width: 200px; height: auto;">
+                            </label>
+                            <br>
+                            <label asp-for="Photo" class="mt-2">Click Photo to Edit</label>
+                            <span asp-validation-for="Photo" class="text-danger d-block"></span>
+                        </div>
+                    </div>
 
-<<<<<<< Updated upstream
-    <label asp-for="Photo"></label>
-    <label class="upload">
-        <small>Select Photo...</small>
-        <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
-        <input type="hidden" asp-for="PhotoURL" />
-        <img src="/photos/@Model.PhotoURL">
-    </label>
-     
-    <span asp-validation-for="Photo"></span>
-    <button class="reset-btn" type="reset">Reset</button><br><br>
-    <section>
-        
-        <button class="btn btn-warning">Confirm</button>
-        
-        <button class="btn btn-primary" data-get="/Account/UpdatePassword">Update Password</button>
-        @* <button data-get="/Camera/Index?controllerName=Account&view=UpdateProfile">Take Photo</button> *@
-        
-    </section>
-</form>
-=======
+                    <!-- Info Column -->
+                    <div class="col-12 col-md-6 mb-3">
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <p class="fw-bold">@Model.Email</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" autofocus>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="row">
+                    <div class="col-12">
+                        <button class="btn btn-warning me-2" type="submit">Confirm</button>
+                        <button class="btn btn-danger" type="reset">Reset</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <label asp-for="Email"><strong>@Model.Email</strong></label>
-        <br />
-        <label asp-for="Name"></label>
-        <input asp-for="Name" autofocus>
-        <span asp-validation-for="Name"></span>
-
-        <br />
-        <section>
-            <button class="btn btn-warning">Confirm</button>
-            <button class="btn btn-danger" type="reset">Reset</button>
-        </section>
-    </form>
+    </div>
 </div>
->>>>>>> Stashed changes

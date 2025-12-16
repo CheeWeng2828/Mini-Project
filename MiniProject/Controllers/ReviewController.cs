@@ -179,7 +179,7 @@ namespace Assignment.Controllers
                 .Select(r => new ReviewVM
                 {
                     Id = r.Id,
-                    //MemberName = r.Member.Name,
+                    MemberName = r.Member.Name,
                     Comment = r.Comment,
                     ServiceRating = r.ServiceRating,
                     CleanlinessRating = r.CleanlinessRating,

@@ -308,7 +308,6 @@ public class AccountController : Controller
         return View();
     }
 
-    [Authorize(Roles ="Member")]
     public IActionResult Profile()
     {
         var m = db.Members.Where(m => m.Email == User.Identity!.Name).FirstOrDefault();
@@ -376,7 +375,7 @@ public class AccountController : Controller
             db.SaveChanges();
 
             TempData["Info"] = "Profile updated.";
-            return RedirectToAction();
+            return RedirectToAction("Profile","Account");
         }
 
         vm.Email = m.Email;
@@ -524,7 +523,7 @@ public class AccountController : Controller
         // Wait for verify response by returing JSON
         var json = JsonSerializer.Deserialize<RecaptchaVerifyResponse>(resString, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        if (json == null && json.Success != true)
+        if (json == null || json.Success != true)
         {
             ModelState.AddModelError(string.Empty, "Verify Failed Please Try Again...");
         }
