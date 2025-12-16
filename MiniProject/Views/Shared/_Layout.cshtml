@@ -58,6 +58,7 @@
 
                 @if (User.Identity!.IsAuthenticated)
                 {
+<<<<<<< Updated upstream
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Account</a>
                         <ul class="dropdown-menu">
@@ -65,6 +66,12 @@
                             <li><a class="dropdown-item" href="/Account/UpdatePassword">Update Password</a></li>
                             <li><a class="dropdown-item" href="/Account/UpdateProfile">Update Profile</a></li>
                         </ul>
+=======
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Account/Profile">Profile</a>
+>>>>>>> Stashed changes
                     </li>
                 }
                 else
@@ -86,6 +93,11 @@
                     </div>
                 </li>
             </ul>
+            @* <a href="/Account/Profile">
+                <img style="width:40px;"
+                     class="rounded-pill" src="/photos/logo.jpg" data-bs-toggle="tooltip"
+                     data-bs-placement="bottom" title="HomePage">
+            </a> *@
         </div>
     </nav>
     <main class="container">
