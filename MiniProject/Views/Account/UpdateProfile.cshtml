@@ -3,16 +3,28 @@
 @{
     ViewBag.Title = "Profile";
 }
-<form class="form" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly"></div>
 
+<<<<<<< Updated upstream
     <label asp-for="Email"></label>
     <b>@Model.Email</b><br>
+=======
+<div class="container-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="w3-card-4 w3-center" style="width:100%;max-width:400px;">
+            <br />
+            <label class="upload">
+                <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
+                <input type="hidden" asp-for="PhotoURL" />
+                <img class="w3-circle" src="/photos/@Model.PhotoURL">
+            </label>
+            <br>
+            <label asp-for="Photo">Click Photo to Edit</label>
+>>>>>>> Stashed changes
 
-    <label asp-for="Name"></label>
-    <input asp-for="Name" autofocus>
-    <span asp-validation-for="Name"></span>
+            <span asp-validation-for="Photo"></span>
 
+<<<<<<< Updated upstream
     <label asp-for="Photo"></label>
     <label class="upload">
         <small>Select Photo...</small>
@@ -32,3 +44,19 @@
         
     </section>
 </form>
+=======
+        </div>
+        <label asp-for="Email"><strong>@Model.Email</strong></label>
+        <br />
+        <label asp-for="Name"></label>
+        <input asp-for="Name" autofocus>
+        <span asp-validation-for="Name"></span>
+
+        <br />
+        <section>
+            <button class="btn btn-warning">Confirm</button>
+            <button class="btn btn-danger" type="reset">Reset</button>
+        </section>
+    </form>
+</div>
+>>>>>>> Stashed changes

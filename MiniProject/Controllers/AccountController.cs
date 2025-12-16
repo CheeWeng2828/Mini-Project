@@ -308,6 +308,14 @@ public class AccountController : Controller
         return View();
     }
 
+    [Authorize(Roles ="Member")]
+    public IActionResult Profile()
+    {
+        var m = db.Members.Where(m => m.Email == User.Identity!.Name).FirstOrDefault();
+        if (m == null) return RedirectToAction("Index", "Home");
+        return View(m);
+    }
+
     // GET: Account/UpdateProfile
     [Authorize(Roles = "Member")]
     public IActionResult UpdateProfile()
