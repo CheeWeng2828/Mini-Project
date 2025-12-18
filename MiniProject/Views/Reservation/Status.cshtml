@@ -1,78 +1,173 @@
 ﻿@model Dictionary<string, List<DateOnly>>
 
-
 @{
-    ViewBag.Title = "Reservation Status";
+    ViewBag.Title = "Reservation Status (Admin)";
 
-    // Min = First day of the month
-    // Max = First day of next month
     DateOnly min = ViewBag.Min;
     DateOnly max = ViewBag.Max;
 }
 
 @section head {
     <style>
-        table {
+        /* ===== Layout ===== */
+        .admin-container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .admin-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* ===== Month Navigation ===== */
+        .month-nav {
+            margin-bottom: 14px;
+        }
+
+            .month-nav a {
+                padding: 6px 12px;
+                border-radius: 6px;
+                background: #e5e7eb;
+                color: #111827;
+                font-weight: 500;
+                text-decoration: none;
+                margin-right: 6px;
+            }
+
+                .month-nav a:hover {
+                    background: #1f2937;
+                    color: white;
+                }
+
+        /* ===== Legend ===== */
+        .legend {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+            .legend span {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+        .box {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        /* ===== Table Wrapper ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        /* ===== Table ===== */
+        .admin-table {
+            width: 100%;
             border-collapse: collapse;
+            font-size: 14px;
         }
 
-        table caption {
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 5px;
+            .admin-table caption {
+                caption-side: top;
+                padding: 12px;
+                font-size: 18px;
+                font-weight: 600;
+                background: #1f2937;
+                color: white;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                border: 1px solid #e5e7eb;
+                padding: 6px;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            .admin-table th {
+                background: #f9fafb;
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+
+        .row-label {
+            font-weight: 600;
+            background: #f3f4f6;
+            position: sticky;
+            left: 0;
+            z-index: 2;
         }
 
-        td, th {
-            border: 1px solid #999;
-            padding: 5px;
-        }
-
+        /* ===== Status Colors ===== */
         .x {
-            background: tomato;
+            background: #f87171; /* booked */
         }
 
         .o {
-            background: lightgreen;
+            background: #86efac; /* available */
+        }
+
+        .today {
+            outline: 2px solid #2563eb;
         }
     </style>
 }
 
-<p>
-    @* Generate links for previous, current and next months *@
-    @for(int n = -1; n <= 1; n++)
-    {
-        if(n > -1)
+<div class="admin-container">
+
+    <!-- Month Navigation -->
+    <div class="month-nav">
+        @for (int n = -1; n <= 1; n++)
         {
-            <text>|</text>
+            var d = min.AddMonths(n);
+            <a href="?month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
         }
+    </div>
 
-        var d = min.AddMonths(n);
-        <a href="?month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
-    }
-</p>
+    <!-- Legend -->
+    <div class="legend">
+        <span><div class="box o"></div> Available</span>
+        <span><div class="box x"></div> Booked</span>
+    </div>
 
-<table>
-    <caption>@min.ToString("MMMM yyyy")</caption>
+    <!-- Table -->
+    <div class="table-wrapper">
+        <table class="admin-table">
+            <caption>@min.ToString("MMMM yyyy")</caption>
 
-    <tr>
-        <th></th>
-        @* Generate headers (dates) *@
-        @for(var d = min; d < max; d = d.AddDays(1))
-        {
-            <th>@d.ToString("dd")</th>
-        }
-    </tr>
+            <tr>
+                <th>Item</th>
+                @for (var d = min; d < max; d = d.AddDays(1))
+                {
+                    <th>@d.ToString("dd")</th>
+                }
+            </tr>
 
-    @* Generate contents (class = x or o) *@
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Key</td>
-            @for (var d = min; d < max; d = d.AddDays(1))
+            @foreach (var item in Model)
             {
-                var cls = item.Value.Contains(d) ? "x" : "o";
-                <td class="@cls"></td>
+                <tr>
+                    <td class="row-label">@item.Key</td>
+
+                    @for (var d = min; d < max; d = d.AddDays(1))
+                    {
+                        var cls = item.Value.Contains(d) ? "x" : "o";
+                        var today = d == DateOnly.FromDateTime(DateTime.Today) ? "today" : "";
+                        <td class="@cls @today"></td>
+                    }
+                </tr>
             }
-        </tr>
-    }
-</table>
+        </table>
+    </div>
+
+</div>

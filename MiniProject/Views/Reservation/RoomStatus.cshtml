@@ -1,85 +1,187 @@
 ﻿@model Dictionary<Room, List<DateOnly>>
 
 @{
-    ViewBag.Title = "Availabiliy";
-    // Min = First day of the month
-    // Max = First day of next month
+    ViewBag.Title = "Room Availability";
+
     DateOnly min = ViewBag.Min;
     DateOnly max = ViewBag.Max;
 }
 
 @section head {
     <style>
-        table {
+        /* ===== Page Layout ===== */
+        .page-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* ===== Month Navigation ===== */
+        .month-nav {
+            margin-bottom: 16px;
+        }
+
+            .month-nav a {
+                text-decoration: none;
+                padding: 6px 12px;
+                border-radius: 6px;
+                background: #f3f4f6;
+                color: #111827;
+                font-weight: 500;
+                margin-right: 6px;
+            }
+
+                .month-nav a:hover {
+                    background: #2563eb;
+                    color: white;
+                }
+
+        /* ===== Table ===== */
+        .availability-table {
+            width: 100%;
             border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            overflow: hidden;
         }
 
-        table caption {
-            font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 5px;
+            .availability-table caption {
+                caption-side: top;
+                font-size: 22px;
+                font-weight: 600;
+                padding: 12px;
+                background: #2563eb;
+                color: white;
+            }
+
+            .availability-table th,
+            .availability-table td {
+                border: 1px solid #e5e7eb;
+                padding: 8px;
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .availability-table th {
+                background: #f9fafb;
+                font-weight: 600;
+            }
+
+        .room-cell {
+            font-weight: 600;
+            background: #f3f4f6;
+            white-space: nowrap;
         }
 
-        td, th {
-            border: 1px solid #999;
-            padding: 5px;
-        }
-
+        /* ===== Availability Colors ===== */
         .x {
-            background: tomato;
+            background: #ef4444;
         }
 
         .o {
-            background: lightgreen;
+            background: #22c55e;
         }
+
+        /* ===== Legend ===== */
+        .legend {
+            display: flex;
+            gap: 16px;
+            margin: 12px 0 24px;
+            font-size: 14px;
+        }
+
+            .legend span {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+        .legend-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+
+        /* ===== Booking CTA ===== */
+        .cta {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+            .cta a {
+                color: #2563eb;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                .cta a:hover {
+                    text-decoration: underline;
+                }
     </style>
 }
 
-<p>
-    @* Generate links for previous, 
+<div class="page-container">
 
-    and next months *@
-    @for(int n = -1; n <= 1; n++)
-    {
-        if(n > -1)
+    <!-- Month Navigation -->
+    <div class="month-nav">
+        @for (int n = -1; n <= 1; n++)
         {
-            <text>|</text>
+            var d = DateTime.Today.AddMonths(n);
+            <a href="?month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
         }
+    </div>
 
-        var d = DateTime.Today.AddMonths(n);
-        <a href="?month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
-    }
-</p>
+    <!-- Legend -->
+    <div class="legend">
+        <span><div class="legend-box o"></div> Available</span>
+        <span><div class="legend-box x"></div> Booked</span>
+    </div>
 
-<table>
-    <caption>@min.ToString("MMMM yyyy")</caption>
+    <!-- Availability Table -->
+    <table class="availability-table">
+        <caption>@min.ToString("MMMM yyyy")</caption>
 
-    <tr>
-        <th></th>
-        @* Generate headers (dates) *@
-        @for(var d = min; d < max; d = d.AddDays(1))
-        {
-            <th>@d.ToString("dd")</th>
-        }
-    </tr>
-
-    @* Generate contents (class = x or o) *@
-    @foreach(var (room,dates) in Model)
-    {
         <tr>
-            <td>@room.Id (@room.RoomTypeId)</td>
-            @for(var d = min; d < max; d = d.AddDays(1))
+            <th>Room</th>
+            @for (var d = min; d < max; d = d.AddDays(1))
             {
-                var cls = dates.Contains(d) ? "x" : "o";
-                <td class="@cls"></td>
+                <th>@d.ToString("dd")</th>
             }
         </tr>
-    }
-</table>
 
-@foreach (var group in Model.GroupBy(m => m.Key.RoomTypeId))
-{
-    <p>
-        Interest? Book <a href="/Reservation/Reserve/@group.Key">now</a> !!!
-    </p>
-}
+        @foreach (var (room, dates) in Model)
+        {
+            <tr>
+                <td class="room-cell">
+                    @room.Id<br />
+                    <small>@room.RoomTypeId</small>
+                </td>
+
+                @for (var d = min; d < max; d = d.AddDays(1))
+                {
+                    var cls = dates.Contains(d) ? "x" : "o";
+                    <td class="@cls"></td>
+                }
+            </tr>
+        }
+    </table>
+
+    <!-- Booking CTA -->
+    @foreach (var group in Model.GroupBy(m => m.Key.RoomTypeId))
+    {
+        <div class="cta">
+            Interested in <strong>@group.Key</strong>?
+            Book <a href="/Reservation/Reserve/@group.Key">now</a>!
+        </div>
+    }
+
+</div>

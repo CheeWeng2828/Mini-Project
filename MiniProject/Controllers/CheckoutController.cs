@@ -5,7 +5,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace Assignment.Controllers
+namespace MiniProject.Controllers
 {
     public class CheckoutController : Controller
     {
