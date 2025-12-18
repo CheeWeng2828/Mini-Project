@@ -95,7 +95,7 @@ public class PaymentController : Controller
                     var qrBytes = qrCode.GetGraphic(10);
                     var base64 = Convert.ToBase64String(qrBytes);
 
-                    TempData["Info"] = "Pending Payment";
+                    TempData["Info"] = "Payment Successfully";
 
                     return Json(new
                     {

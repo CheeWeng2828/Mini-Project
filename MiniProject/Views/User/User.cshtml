@@ -51,7 +51,11 @@
             <td>@u.Active</td>
             <td>
                 <div class="btn-group ">
-                    <button class="btn btn-primary btn-sm" data-get="/User/Detail?id=@u.Id">Detail</button>
+                    @if (u.Role == "Member")
+                    {
+                        <button class="btn btn-primary btn-sm" data-get="/User/Detail?id=@u.Id">Detail</button>
+                    }
+
 
                     @if (u.Active == true)
                     {

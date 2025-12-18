@@ -64,7 +64,7 @@ namespace MiniProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Detail(int id)
         {
-            var u = db.Users.FirstOrDefault(u => u.Id == id);
+            var u = db.Members.FirstOrDefault(u => u.Id == id);
 
             if (u == null)
                 return RedirectToAction("Index");
@@ -96,7 +96,7 @@ namespace MiniProject.Controllers
                 {
                     Email = vm.Email,
                     Hash = hp.HashPassword(vm.Password),
-                    Name = vm.Name,
+                    Name = "Admin",
                     Active = true,
                     LoginAttemptCount = 0,
                     LastFailedLoginTime = null,

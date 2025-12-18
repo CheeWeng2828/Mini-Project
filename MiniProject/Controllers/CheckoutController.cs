@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MiniProject.Models;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -281,7 +282,6 @@ namespace MiniProject.Controllers
         [Authorize]
         public async Task<IActionResult> ProcessRefund(Refund vm)
         {
-
             try
             {
                 var payment = db.Payment.FirstOrDefault(p => p.Id == vm.PaymentId);
@@ -290,18 +290,20 @@ namespace MiniProject.Controllers
                     TempData["Info"] = "Payment not found or Paypal Capture ID missing";
                     return RedirectToAction("History");
                 }
-                if (payment.Status == "Refund")
+
+                if (payment.Status != null &&
+                    payment.Status.Equals("Refund", StringComparison.OrdinalIgnoreCase))
                 {
                     TempData["Info"] = "This payment has already been refunded";
                     return RedirectToAction("History");
                 }
+
                 if (vm.Amount <= 0 || vm.Amount > payment.Amount)
                 {
-                    ModelState.AddModelError("Amount", "Invalid refund amount");
+                    TempData["Info"] = "Invalid refund amount";
                     return RedirectToAction("History");
                 }
 
-                // Get Paypal Access Token
                 string accessToken = await GetPaypalAccessToken();
                 if (string.IsNullOrEmpty(accessToken))
                 {
@@ -309,22 +311,15 @@ namespace MiniProject.Controllers
                     return RedirectToAction("History");
                 }
 
-                // MODIFIED: Convert RM to USD for PayPal refund (same 0.24 conversion as payment)
-                decimal usdAmount = vm.Amount * 0.24m;
-
-                // Check if this is a full refund
                 bool isFullRefund = vm.Amount == payment.Amount;
-
-                // MODIFIED: For full refunds, don't specify amount - PayPal will refund the full captured amount
                 var refundRequest = new JsonObject();
 
                 if (!isFullRefund)
                 {
-                    // Only specify amount for partial refunds, converted to USD
                     refundRequest["amount"] = new JsonObject
                     {
-                        ["currency_code"] = "USD",
-                        ["value"] = usdAmount.ToString("F2")
+                        ["currency_code"] = "MYR",
+                        ["value"] = vm.Amount.ToString("F2")
                     };
                 }
 
@@ -336,13 +331,14 @@ namespace MiniProject.Controllers
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                     client.DefaultRequestHeaders.Add("Prefer", "return=representation");
 
-                    var httpResponse = await client.PostAsync(url,
-                        new StringContent(refundRequest.ToString(), System.Text.Encoding.UTF8, "application/json"));
+                    var httpResponse = await client.PostAsync(
+                        url,
+                        new StringContent(refundRequest.ToString(), Encoding.UTF8, "application/json")
+                    );
 
                     if (!httpResponse.IsSuccessStatusCode)
                     {
                         var errorContent = await httpResponse.Content.ReadAsStringAsync();
-                        // MODIFIED: Added errorContent details to help with debugging PayPal API errors
                         TempData["Info"] = $"PayPal refund failed: {httpResponse.ReasonPhrase}. Details: {errorContent}";
                         return RedirectToAction("History");
                     }
@@ -350,67 +346,76 @@ namespace MiniProject.Controllers
                     var strResponse = await httpResponse.Content.ReadAsStringAsync();
                     var jsonResponse = JsonNode.Parse(strResponse);
 
-                    if (jsonResponse != null)
+                    if (jsonResponse == null)
                     {
-                        var refundStatus = jsonResponse["status"]?.ToString();
-                        var refundId = jsonResponse["id"]?.ToString();
-
-                        if (string.IsNullOrEmpty(refundId))
-                        {
-                            TempData["Info"] = "Paypal refund response missing refund ID";
-                            return RedirectToAction("History");
-                        }
-
-                        // MODIFIED: Added validation to check if PayPal actually approved/completed the refund
-                        if (refundStatus != "COMPLETED" && refundStatus != "PENDING")
-                        {
-                            TempData["Info"] = $"PayPal refund failed with status: {refundStatus}";
-                            return RedirectToAction("History");
-                        }
-
-                        using var transaction = db.Database.BeginTransaction();
-                        try
-                        {
-                            payment.Status = "Refund";
-                            payment.RefundDate = DateTime.UtcNow;
-                            payment.RefundId = refundId;
-
-                            var reservation = db.Reservations
-                                .Include(r => r.Payment)
-                                .Include(r => r.Room)
-                                    .ThenInclude(rm => rm.RoomTypes)
-                                .FirstOrDefault(r => r.Id == payment.ReservationId);
-                            if (reservation != null)
-                            {
-                                reservation.Active = false;
-                            }
-
-                            db.SaveChanges();
-                            transaction.Commit();
-
-                            var email = db.Users.Where(u => u.Id == reservation.MemberId).Select(u => u.Email).First();
-                            RefundEmail(email, reservation);
-                            TempData["Info"] = "Refund processed successfully";
-                            return RedirectToAction("Refund", new { paymentId = payment.Id });
-                        }
-                        catch (Exception dbEx)
-                        {
-                            transaction.Rollback();
-                            TempData["Info"] = "Database error after successful PayPal refund. Please contact support.";
-                            return RedirectToAction("History");
-                        }
-                    }
-                    else
-                    {
-                        // MODIFIED: Added proper handling for null/invalid JSON response from PayPal
                         TempData["Info"] = "Invalid response from PayPal";
                         return RedirectToAction("History");
                     }
+
+                    var refundStatus = jsonResponse["status"]?.ToString();
+                    var refundId = jsonResponse["id"]?.ToString();
+
+                    if (string.IsNullOrEmpty(refundId))
+                    {
+                        TempData["Info"] = "Paypal refund response missing refund ID";
+                        return RedirectToAction("History");
+                    }
+
+                    if (!string.Equals(refundStatus, "COMPLETED", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(refundStatus, "PENDING", StringComparison.OrdinalIgnoreCase))
+                    {
+                        TempData["Info"] = $"PayPal refund failed with status: {refundStatus}";
+                        return RedirectToAction("History");
+                    }
+
+                    Reservation reservation = null;
+                    string email = null;
+
+                    using var transaction = await db.Database.BeginTransactionAsync();
+                    try
+                    {
+                        payment.Status = "Refund";
+                        payment.RefundDate = DateTime.UtcNow;
+                        payment.RefundId = refundId;
+
+                        reservation = db.Reservations
+                            .Include(r => r.Payment)
+                            .Include(r => r.Room)
+                                .ThenInclude(rm => rm.RoomTypes)
+                            .FirstOrDefault(r => r.Id == payment.ReservationId);
+
+                        if (reservation != null)
+                        {
+                            reservation.Active = false;
+
+                            email = db.Users
+                                .Where(u => u.Id == reservation.MemberId)
+                                .Select(u => u.Email)
+                                .FirstOrDefault();
+                        }
+
+                        await db.SaveChangesAsync();
+                        await transaction.CommitAsync();
+                    }
+                    catch
+                    {
+                        await transaction.RollbackAsync();
+                        TempData["Info"] = "Database error after successful PayPal refund. Please contact support.";
+                        return RedirectToAction("History");
+                    }
+
+                    // ✅ SAFE — no database usage here
+                    if (!string.IsNullOrEmpty(email) && reservation != null)
+                    {
+                        RefundEmail(email, reservation);
+                    }
+
+                    TempData["Info"] = "Refund processed successfully";
+                    return RedirectToAction("Refund", new { paymentId = payment.Id });
                 }
             }
             catch (Exception ex)
             {
-                // MODIFIED: Fixed TempData key casing from "Info" to "Info" to match other instances
                 TempData["Info"] = "An error occurred while processing refund: " + ex.Message;
                 return RedirectToAction("History");
             }
@@ -514,7 +519,7 @@ namespace MiniProject.Controllers
 
         private void RefundEmail(string email, Reservation reservation)
         {
-            User u = db.Users.Find(email)!;
+            User u = db.Users.Where(u => u.Email == email).First();
 
             var roomName = reservation.Room.RoomTypes.Name;
             var totalAmount = reservation.Payment.Amount;

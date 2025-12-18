@@ -1,4 +1,4 @@
-﻿@model User
+﻿@model Member
 
 
 @{
@@ -6,11 +6,8 @@
     var u = Model;
 }
 
-@* @if (User.IsInRole("Member"))
-{
-    var photoURL = db.Members.Find(User.Identity!.Name)!.PhotoURL;
-    <img src="/photos/@photoURL">
-} *@
+
+<img width="150" height="150" src="/photos/@u.PhotoURL">
 
 <table class="table">
     <tr>
@@ -28,4 +25,4 @@
 
 </table>
 
-<button class="btn btn-secondary btn-sm" data-get="/User/">Index</button>
+<button class="btn btn-secondary btn-sm" data-get="/User/">Back</button>

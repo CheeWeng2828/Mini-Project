@@ -54,26 +54,15 @@
             <th>Total</th>
             <td>@total</td>
         </tr>
-        @* <tr>
-            <th>Paid</th>
-            <td>
-                <select name="Paid" class="form-select">
-                    <option value="true"
-                            selected="@(Model.Paid)">Yes</option>
-                    <option value="false"
-                            selected="@(!Model.Paid)">No</option>
-                </select>
-            </td>
-        </tr> *@
         <tr>
             <th>Action</th>
             <td>
-                @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "Paypal")
+                @if (rs.CheckIn > currentDay && rs.Payment.Status == "Completed" && rs.Payment.PaymentMethod == "Paypal")
                 {
                     <button class="btn btn-danger" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
                 }
 
-                @if (rs.Payment.Status == "Complete" && rs.Payment.PaymentMethod == "E-Wallet")
+                @if (rs.CheckIn > currentDay && rs.Payment.Status == "Completed" && rs.Payment.PaymentMethod == "E-Wallet")
                 {
                     <button class="btn btn-danger" data-get="/Payment/QrRefund?paymentId=@rs.Payment.Id">Refund</button>
                 }
@@ -84,9 +73,5 @@
     <section>
         <button class="btn btn-secondary" data-get="Index">Back</button>
         <button class="btn btn-success" type="submit">Save</button>
-        @if(rs.CheckIn > currentDay && rs.Payment.Status == "Completed")
-        {
-            <button class="btn btn-danger" data-get="/Checkout/RefundPayment?id=@rs.Payment.Id">Refund</button>
-        }
     </section>
 </form>

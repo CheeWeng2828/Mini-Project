@@ -251,6 +251,7 @@ public class ReservationController : Controller
         // dict[R002] = [2022-12-03, 2022-12-04, ...]
 
         var dict = db.Rooms
+                    .Where(r => r.Active == true)
                     .OrderBy(r => r.Id)
                     .ToDictionary(r => r.Id, r => new List<DateOnly>());
 
@@ -303,7 +304,7 @@ public class ReservationController : Controller
         // dict[R002] = [2022-12-03, 2022-12-04, ...]
 
         var dict = db.Rooms
-                     .Where(rm => rm.RoomTypeId == id)
+                     .Where(rm => rm.RoomTypeId == id && rm.Active == true)
                      .ToDictionary(rm => rm, rm => new List<DateOnly>());
 
         // 2. Retrieve reservation records

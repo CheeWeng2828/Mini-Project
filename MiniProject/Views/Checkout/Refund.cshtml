@@ -102,11 +102,11 @@
 
 @if(User.IsInRole("Member"))
 {
-    <button class="back-btn" data-get="/Checkout/History">Back</button>
+    <button class="btn btn-light" data-get="/Checkout/History">Back</button>
 }
 @if(User.IsInRole("Admin"))
 {
-    <button class="back-btn" data-get="/Reservation/Index">Back</button>
+    <button class="btn btn-light" data-get="/Reservation/Index">Back</button>
 }
 
 <br>
