@@ -658,3 +658,422 @@ body {
     color: #2d3748;
     margin-bottom: 20px;
 }
+/* Simple payment selection design */
+.payment-method-container {
+    max-width: 760px;
+    margin: 36px auto;
+    padding: 18px;
+    text-align: center;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color: #333;
+}
+
+    .payment-method-container p {
+        margin: 0 0 14px 0;
+        color: #666;
+        font-size: 0.98rem;
+    }
+
+.payment-selection {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+    /* Link card */
+    .payment-selection a {
+        display: inline-block;
+        padding: 8px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid #eee;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        text-decoration: none;
+        transition: transform .12s ease, box-shadow .12s ease;
+    }
+
+        /* Hover / focus */
+        .payment-selection a:hover,
+        .payment-selection a:focus {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.07);
+            outline: none;
+        }
+
+    /* Logo size — controlled purely by CSS */
+    .payment-selection img {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        display: block;
+    }
+
+/* Smaller screens */
+@media (max-width: 480px) {
+    .payment-selection img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .payment-method-container {
+        padding: 12px;
+        margin: 20px auto;
+    }
+}
+
+/* Very simple, minimal styling for payment detail */
+.payment-detail-container {
+    max-width: 700px;
+    margin: 34px auto;
+    padding: 18px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color: #222;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+}
+
+    .payment-detail-container p {
+        margin: 8px 0;
+        line-height: 1.4;
+        font-size: 1rem;
+    }
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+.detail-label {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.detail-value {
+    font-weight: 600;
+    color: #111;
+}
+
+/* QR area (placeholder) */
+.qr-area {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 14px;
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #f3f3f3;
+}
+
+.qr-placeholder {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(180deg,#ffffff,#fbfbfb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+/* Button */
+.button-pay {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: #0b72ff;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, opacity .12s;
+}
+
+    .button-pay:active {
+        transform: translateY(1px);
+    }
+
+    .button-pay[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+/* Small screens — escaped for Razor */
+@media (max-width: 480px) {
+    .payment-container {
+        padding: 12px;
+        margin: 18px;
+    }
+
+    .qr-placeholder {
+        width: 120px;
+        height: 120px;
+        font-size: 0.85rem;
+    }
+}
+
+.success-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.success-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    animation: scaleIn 0.5s ease;
+}
+
+.checkmark {
+    color: white;
+    font-size: 50px;
+    animation: checkmark 0.5s ease 0.5s both;
+}
+
+.success-title {
+    color: #28a745;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.receipt-details {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: left;
+    margin: 30px 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+    .detail-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+        font-size: 18px;
+        color: #28a745;
+        padding-top: 15px;
+    }
+
+.detail-label {
+    color: #666;
+}
+
+.detail-value {
+    color: #333;
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: transform 0.3s;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.transaction-id {
+    background: #fff3cd;
+    color: #856404;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.qr-receipt {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+}
+
+.print-btn {
+    background: #17a2b8;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+/* ===== Client Status Layout ===== */
+.page-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* ===== Month Navigation ===== */
+.month-nav {
+    margin-bottom: 16px;
+}
+
+    .month-nav a {
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: #f3f4f6;
+        color: #111827;
+        font-weight: 500;
+        margin-right: 6px;
+    }
+
+        .month-nav a:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+/* ===== Table ===== */
+.availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .availability-table caption {
+        caption-side: top;
+        font-size: 22px;
+        font-weight: 600;
+        padding: 12px;
+        background: #2563eb;
+        color: white;
+    }
+
+    .availability-table th,
+    .availability-table td {
+        border: 1px solid #e5e7eb;
+        padding: 8px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .availability-table th {
+        background: #f9fafb;
+        font-weight: 600;
+    }
+
+.room-cell {
+    font-weight: 600;
+    background: #f3f4f6;
+    white-space: nowrap;
+}
+
+/* ===== Availability Colors ===== */
+.x {
+    background: #ef4444;
+}
+
+.o {
+    background: #22c55e;
+}
+
+/* ===== Legend ===== */
+.legend {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0 24px;
+    font-size: 14px;
+}
+
+    .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+.legend-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+/* ===== Booking CTA ===== */
+.cta {
+    margin-top: 24px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 10px;
+}
+
+    .cta a {
+        color: #2563eb;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .cta a:hover {
+            text-decoration: underline;
+        }
