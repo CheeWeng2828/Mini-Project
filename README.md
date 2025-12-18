@@ -44,8 +44,3 @@ Use these accounts to test the system.
 |-------|------------------|----------|
 | Admin | `2@g.com`   | `123456`   |
 | User  | `8@gmail.com` | `123456`   |
-
-# ⚠️ Known Issues / Notes
-- [e.g., The search function only works for exact matches.]
-- [e.g., Images might not load if the internet connection is slow (linked to external URL).]
-- [e.g., Please run on Google Chrome for best layout results.]
