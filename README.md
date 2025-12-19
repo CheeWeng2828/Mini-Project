@@ -29,8 +29,25 @@
 Please follow these steps strictly to run the project.
 
 ## Database Setup
-1. Create a database named: `[database_name]`
+1. Click "View" --> "Server Explorer"
 
+![alt text](image.png)
+
+2. Click "Data Connection" button inside the "Server Explorer"
+
+![alt text](image-1.png)
+
+3. Click "Microsoft SQL Server Database File" in "Data Connection" pop-up window
+
+![alt text](image-2.png)
+
+4. Select the Db.mdf file within the project file
+
+![alt text](image-3.png)
+
+5. After selection click "OK" button
+
+![alt text](image-4.png)
 ## Running the Application
 Run the following command to start the server:
 ```
