@@ -4,11 +4,11 @@
 **Semester:** [Semester 2/Year 2]
 
 # 👥 Team Members
-- [Nyin Joo Yee] (ID: [2406879]) - [Role, e.g., Frontend/Backend]
-- [Ee Wan Yin] (ID: [2404909]) - [Role]
-- [Ea Jia Pei] (ID: [2404971]) - [Role]
-- [Lim Ming Yi] (ID: [2405142]) - [Role]
-- [Lam Chee Weng] (ID: [2405086]) - [Role]
+- [Nyin Joo Yee] (ID: [2406879]) - [Role : Frontend]
+- [Ee Wan Yin] (ID: [2404909]) - [Role : Frontend & Backend]
+- [Ea Jia Pei] (ID: [2404971]) - [Role : Frontend]
+- [Lim Ming Yi] (ID: [2405142]) - [Role : Frontend]
+- [Lam Chee Weng] (ID: [2405086]) - [Role : Frontend & Backend]
 
 
 
@@ -31,23 +31,15 @@ Please follow these steps strictly to run the project.
 ## Database Setup
 1. Click "View" --> "Server Explorer"
 
-![alt text](image.png)
-
 2. Click "Data Connection" button inside the "Server Explorer"
-
-![alt text](image-1.png)
 
 3. Click "Microsoft SQL Server Database File" in "Data Connection" pop-up window
 
-![alt text](image-2.png)
-
 4. Select the Db.mdf file within the project file
 
-![alt text](image-3.png)
 
 5. After selection click "OK" button
 
-![alt text](image-4.png)
 ## Running the Application
 Run the following command to start the server:
 ```
@@ -58,9 +50,9 @@ Run the following command to start the server:
 # 🔑 Test Credentials (For Grading)
 Use these accounts to test the system.
 | Role  | Username / Email | Password |
-|-------|------------------|----------|
-| Admin | `2@g.com`   | `123456`   |
-| User  | `8@gmail.com` | `123456`   |
+| ----- | ---------------- | -------- |
+| Admin | `admint@test.com`| `123456` |
+| User  | `8@gmail.com`    | `123456` |
 
 
 Paypal Account
@@ -68,3 +60,8 @@ Paypal Account
 |-------|------------------|----------|
 | Business Account | `sb-47zegg43610386@business.example.com`   | `Am4t?45>`   |
 | Customer Account  | `sb-aafea45935190@personal.example.com` | `W|$In6u-`   |
+
+| Role             | Username / Email                         | Password   |
+| ---------------- | ---------------------------------------- | ---------- |
+| Business Account | `sb-47zegg43610386@business.example.com` | `Am4t?45>` |
+| Customer Account | `sb-aafea45935190@personal.example.com`  | `W|$In6u-` |
