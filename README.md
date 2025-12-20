@@ -56,11 +56,6 @@ Use these accounts to test the system.
 
 
 Paypal Account
-| Role  | Username / Email | Password |
-|-------|------------------|----------|
-| Business Account | `sb-47zegg43610386@business.example.com`   | `Am4t?45>`   |
-| Customer Account  | `sb-aafea45935190@personal.example.com` | `W|$In6u-`   |
-
 | Role             | Username / Email                         | Password   |
 | ---------------- | ---------------------------------------- | ---------- |
 | Business Account | `sb-47zegg43610386@business.example.com` | `Am4t?45>` |
